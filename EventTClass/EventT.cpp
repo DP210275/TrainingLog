@@ -11,6 +11,9 @@ EventT::EventT(EventTypeT t, int i){
     type = t;
     id = i;
     notes = "N/A";
+    day = 0;
+    month = 0;
+    trainingWeek = 0;
 }
 
 float EventT::GetDistance(void){
@@ -44,6 +47,20 @@ string EventT::GetNotes(void){
     return notes;
 }
 
+int EventT::GetDay(void){
+    return day;
+}
+
+int EventT::GetMonth(void){
+    return month;
+}
+
+int EventT::GetTrainingWeek(void){
+    return trainingWeek;
+}
+
+/*********************************************************************/
+
 void EventT::SetDistance(float d){
     distance = d;
 }
@@ -58,4 +75,16 @@ void EventT::SetNotes(string note){
 
 void EventT::SetType(EventTypeT t){
     type = t;
+}
+
+void EventT::SetDay(int d){
+    day = d;
+}
+
+void EventT::SetMonth(int m){
+    month = m;
+}
+
+void EventT::SetTrainingWeek(int tw){
+    trainingWeek = tw;
 }

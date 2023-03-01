@@ -2,6 +2,7 @@
 #define EVENT_HEADER
 
 #include <string>
+//#include <ctime>
 
 enum EventTypeT{
     S,
@@ -20,11 +21,17 @@ class EventT{
         int GetId(void);
         std::string GetType(void);
         std::string GetNotes(void);
+        int GetDay(void);
+        int GetMonth(void);
+        int GetTrainingWeek(void);
 
         void SetType(EventTypeT t);
         void SetDistance(float d);
         void SetHeartRate(int hr);
         void SetNotes(std::string note);
+        void SetDay(int d);
+        void SetMonth(int m);
+        void SetTrainingWeek(int tw);
     
     private:
         float distance;
@@ -32,6 +39,9 @@ class EventT{
         int id;
         EventTypeT type;
         std::string notes;
+        int day;
+        int month;
+        int trainingWeek;
 };
 
 #endif
