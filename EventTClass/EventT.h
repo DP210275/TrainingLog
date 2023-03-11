@@ -24,6 +24,8 @@ class EventT{
         int GetDay(void);
         int GetMonth(void);
         int GetTrainingWeek(void);
+        int GetTime(void);
+        float GetSpeed(void);
 
         void SetType(EventTypeT t);
         void SetDistance(float d);
@@ -32,6 +34,9 @@ class EventT{
         void SetDay(int d);
         void SetMonth(int m);
         void SetTrainingWeek(int tw);
+        void SetTime(int t);
+        void SetSpeed(float s);
+        void CalculateSpeed(void);
     
     private:
         float distance;
@@ -42,6 +47,8 @@ class EventT{
         int day;
         int month;
         int trainingWeek;
+        float speed;
+        int time;
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include <boost/algorithm/string.hpp>   //for the trim() function
 #include <cctype>
 #include <ctime>
+#include <iomanip>
 
 #include "EventT.h"
 
@@ -21,7 +22,7 @@ void WriteToFile(vector<EventT>& events, ofstream& outFile);
 void ReadEventsFromFile(vector<EventT>& events);
 void InputEventDataFromUser(EventT& event);
 float GetDistanceFromUser();
-bool IsAFloat(string& str);
+bool IsAFloat(string& str, int reason);
 int GetHeartRateFromUser();
 bool ContainsOnlyNumbers(const string& str);
 string GetNotesFromUser();
@@ -34,6 +35,8 @@ bool Find(vector<int> vec, int key);
 int GetLocalMonthOrDay(int control);
 int GetTrainingWeekFromUser();
 bool IsValidHR(string resp);
+int GetTimeFromUser();
+bool IsReasonableTime(string rsp);
 
 int main(){
     vector<EventT> createdEvents;
@@ -115,7 +118,10 @@ void WriteToFile(vector<EventT>& events, ofstream& outFile){
         outFile<< events[i].GetNotes() << " ; ";
         outFile<< events[i].GetMonth() << " ; ";
         outFile<< events[i].GetDay() << " ; ";
-        outFile<< events[i].GetTrainingWeek() << " ; \n";
+        outFile<< events[i].GetTrainingWeek() << " ; ";
+        outFile<< events[i].GetTime() << " ; ";
+        outFile<< fixed;
+        outFile<< setprecision(2) << events[i].GetSpeed() << " ; \n";
     }
     return;
 }
@@ -130,15 +136,17 @@ void ReadEventsFromFile(vector<EventT>& events){
     int mon;
     int d;
     int week;
+    int time;
+    float speed;
 
     inFile.open(file.c_str());
     while(getline(inFile, part, ';')){        
         EventT newEvent(N, numEvents);
 
-        for(size_t i = 0; i < 7; i++){
+        for(size_t i = 0; i < 9; i++){
             if(i > 0){
                 getline(inFile, part, ';');
-                if(i == 6){     // when we get the Notes info from the file, trim the whitespace before and after it
+                if(i == 8){     // when we get the Notes info from the file, trim the whitespace before and after it
                     boost::trim(part);
                 }
             }
@@ -169,6 +177,12 @@ void ReadEventsFromFile(vector<EventT>& events){
             }else if(i == 6){       //set the training week number
                 week = atoi(part.c_str());
                 newEvent.SetTrainingWeek(week);
+            }else if(i == 7){
+                time = atoi(part.c_str());
+                newEvent.SetTime(time);
+            }else if(i == 8){
+                speed = stof(part);
+                newEvent.SetSpeed(speed);
             }
         }
         getline(inFile, part, '\n');
@@ -184,6 +198,7 @@ void InputEventDataFromUser(EventT& event){
     int eventDay; 
     int eventMonth;
     int eventWeek;
+    int userTime;
 
     //Get all info from user
     if(!UseCurrentDay()){
@@ -197,6 +212,7 @@ void InputEventDataFromUser(EventT& event){
     userDistance = GetDistanceFromUser();
     userHR = GetHeartRateFromUser();
     userNotes = GetNotesFromUser();
+    userTime = GetTimeFromUser();
 
     //Set the object data
     event.SetDistance(userDistance);
@@ -205,6 +221,8 @@ void InputEventDataFromUser(EventT& event){
     event.SetMonth(eventMonth);
     event.SetDay(eventDay);
     event.SetTrainingWeek(eventWeek);
+    event.SetTime(userTime);
+    event.CalculateSpeed();
 
     return;
 }
@@ -216,7 +234,7 @@ float GetDistanceFromUser(){
     cout<< "Please enter the distance in miles, to 2 decimal places --> ";
     getline(cin, response);
 
-    while(response.length() == 0 or !IsAFloat(response)){
+    while(response.length() == 0 or !IsAFloat(response, 10)){
         cout<< "Please enter the distance in miles, to 2 decimal places --> ";
         getline(cin, response);
     }
@@ -230,7 +248,7 @@ float GetDistanceFromUser(){
     This function will return whether or not a string given by the user is a float. It will modify the string by rounding the number to the nearest hundredth if
     the decimal exceeds 2 places, and will give a true or false if the string is a float or not.
 */
-bool IsAFloat(string& str){
+bool IsAFloat(string& str, int reason){
     size_t decimalPos = str.find(".");
     bool rv;
     int compare;
@@ -243,7 +261,7 @@ bool IsAFloat(string& str){
             rv = false;
         }else{
             compare = stoi(str);
-            if(compare <=10){               //check the distance for reasonableness, if not then returns false
+            if(compare <= reason){               //check the distance for reasonableness, if not then returns false
                 str.append(".00");
                 rv = true;
             }else{          
@@ -509,4 +527,32 @@ bool IsValidHR(string resp){
     }
 
     return isValid;
+}
+
+int GetTimeFromUser(){
+    string response;
+    int rv;
+
+    cout<< "Please enter the time in minutes --> ";
+    getline(cin, response);
+
+    while(response.length() == 0 or !ContainsOnlyNumbers(response) or !IsReasonableTime(response)){
+        cout<< "Please enter the time in minutes --> ";
+        getline(cin, response);
+    }
+
+    rv = atoi(response.c_str());
+    
+    return rv;
+}
+
+bool IsReasonableTime(string rsp){
+    bool isReasonable = false;
+    int t = atoi(rsp.c_str());
+
+    if(t <= 180 and t > 0){
+        isReasonable = true;
+    }
+
+    return isReasonable;
 }

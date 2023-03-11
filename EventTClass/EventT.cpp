@@ -14,6 +14,8 @@ EventT::EventT(EventTypeT t, int i){
     day = 0;
     month = 0;
     trainingWeek = 0;
+    time = 0;
+    speed = 0.0;
 }
 
 float EventT::GetDistance(void){
@@ -59,6 +61,14 @@ int EventT::GetTrainingWeek(void){
     return trainingWeek;
 }
 
+int EventT::GetTime(void){
+    return time;
+}
+
+float EventT::GetSpeed(void){
+    return speed;
+}
+
 /*********************************************************************/
 
 void EventT::SetDistance(float d){
@@ -87,4 +97,16 @@ void EventT::SetMonth(int m){
 
 void EventT::SetTrainingWeek(int tw){
     trainingWeek = tw;
+}
+
+void EventT::SetTime(int t){
+    time = t;
+}
+
+void EventT::SetSpeed(float s){
+    speed = s;
+}
+
+void EventT::CalculateSpeed(){
+    speed = distance/(float(time)/float(60));
 }
