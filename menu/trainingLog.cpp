@@ -4,6 +4,7 @@ using namespace std;
 
 void OutputChoices();
 int GetUserSelection();
+int ValidInput();
 void TrainingMenu();
 void SwimData();
 void RunData();
@@ -52,13 +53,14 @@ void OutputChoices() {
 
 }
 
+
 int GetUserSelection() {
     int userChoice;
 
     cout << endl;
     cout << '\t'<<'\t'<< "     What would you like to select?";
     cout << '\t' ;
-    cin >> userChoice;
+    userChoice = validInput();;
     cout << endl;
 
     if (userChoice == 1) {
@@ -67,27 +69,44 @@ int GetUserSelection() {
         DataAnalysis();
     } else if (userChoice == 3) {
         exit(-1);
-    } 
-    
-    while (userChoice <= 0 || userChoice > 3) {
-        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
-        cout << endl;
+    } else {
+        while (userChoice <= 0 || userChoice > 3) {
+            cout << '\t'<< '\t'<< "   Invalid selection. Please enter 1, 2, or 3." << endl;
+            cout << endl;
+            cout << '\t'<<'\t'<< "     What would you like to select?";
+            cout << '\t' ;
+            userChoice = validInput();;
+            cout << endl;
 
-        cout << '\t'<<'\t'<< "     What would you like to select?";
-        cout << '\t' ;
-        cin >> userChoice;
-        cout << endl;
-
-        if (userChoice == 1) {
-            TrainingMenu();
-        } else if (userChoice == 2) {
-            DataAnalysis();
-        } else if (userChoice == 3) {
-            exit(-1);
-        } 
+            if (userChoice == 1) {
+                TrainingMenu();
+            } else if (userChoice == 2) {
+                DataAnalysis();
+            } else if (userChoice == 3) {
+                exit(-1);
+            }
+        }
     }
 
     return userChoice;
+}
+
+int validInput()
+{
+    int x;
+    cin >> x;
+    while(cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout << endl;
+        cout <<  '\t'<<'\t'<< "    Invalid selection. Please enter 1, 2, or 3.";
+        cout << endl << endl;
+        cout << '\t'<<'\t'<< "     What would you like to select?";
+        cout << '\t' ;
+        cin >> x;
+    }
+    return x;
 }
 
 void TrainingMenu() {
