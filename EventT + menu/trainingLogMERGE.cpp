@@ -326,7 +326,7 @@ void SwimData() {
     /********** Duration **********/
     cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
     cin >> userDuration;
-    while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or userDuration == "0"){
+    while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << '\t'<< '\t'<< "   Invalid duration. Please try again." << endl;
         cout << endl;
@@ -397,12 +397,26 @@ void SwimData() {
 }
 
 void RunData() {
-    string heartRate;
-    string distance;
+    EventT runEvent(R, numEvents);
+    string useCurrentDate;
+    string userHeartRate;
+    string userDistance;
     string notes;
-    string speed;
-    string date;
-    string duration;
+    string userMonth;
+    string userDay;
+    string userTrainingWeek;
+    string userDuration;
+    int day;
+    int month;
+    int trainingWeek;
+    int duration;
+    float distance;
+    int heartRate;
+    vector<int> validDays;
+
+    //for testing purposes, will remove when user repositories are implemented
+    ofstream outFile;
+    outFile.open("dummyRepo.txt");
 
     cout << R"(
 
@@ -419,29 +433,138 @@ void RunData() {
     cout << '\t' << '\t'<<'\t'<<"Enter run training data: " << endl;
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Date of Workout (dd/mm/yy): ";
-    cin >> date;
-    cout << endl;
+    /********** Date **********/
+    cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+    cin >> useCurrentDate;
+    while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+        cin >> useCurrentDate;
+    }
 
+    if(useCurrentDate == "Y" or useCurrentDate == "y"){
+        month = GetLocalMonthOrDay(1);
+        day = GetLocalMonthOrDay(2);
+        cout << endl;
+    }else{
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+        cin >> userMonth;
+
+        //Validate userMonth
+        while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
+        userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
+            cout << endl;
+            cout << '\t'<< '\t' << "   Invalid month. Please try again." << endl;
+            cout << endl;
+            cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+            cin>> userMonth;
+        }
+        cout << endl;
+        month = atoi(userMonth.c_str());
+
+        //Set the days of the entered month for validating userDay
+        SetMonthDays(validDays, month);
+
+        cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+        cin >> userDay;
+
+        //Validate userDay
+        while(!DayIsValid(validDays, userDay)){
+            cout << endl;
+            cout << '\t'<< '\t' << "   Invalid day. Please try again." << endl;
+            cout << endl;
+            cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+            cin>> userDay;
+        }
+        cout << endl;
+        day = atoi(userDay.c_str());
+    }
+
+    /********** Training Week Number **********/
+    cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+    cin >> userTrainingWeek;
+    while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid training week number. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+        cin >> userTrainingWeek;
+    }
+    cout << endl;
+    trainingWeek = atoi(userTrainingWeek.c_str());
+
+    /********** Duration **********/
     cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
-    cin >> duration;
+    cin >> userDuration;
+    while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid duration. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+        cin >> userDuration;
+    }
     cout << endl;
+    duration = atoi(userDuration.c_str());
 
+    /********** Distance **********/
     cout << '\t' << '\t'<<'\t'<<"Total Distance (miles): ";
-    cin >> distance;
+    cin >> userDistance;
+    while(userDistance.length() == 0 or !IsAFloat(userDistance)){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid distance. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Total Distance (miles)):  ";
+        cin >> userDistance;
+    }
     cout << endl;
-    
-    cout << '\t' << '\t'<<'\t'<<"Workout Speed (mph): ";
-    cin >> speed;
-    cout << endl;
+    distance = stof(userDistance);
 
+    /********** Heart Rate **********/
     cout << '\t' << '\t'<<'\t'<<"Heart Rate: ";
-    cin >> heartRate;
+    cin >> userHeartRate;
+    while(!IsValidHR(userHeartRate)){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid heart rate. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Heart Rate:  ";
+        cin >> userHeartRate;
+    }
+    cout << endl;
+    heartRate = atoi(userHeartRate.c_str());
+
+    /********** Notes ***********/
+    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
+    cin.ignore(100, '\n');
+    getline(cin, notes);
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
-    cin >> notes;
-    cout << endl;
+    //set the run EventT attributes and eventually write event to userREPO file.
+    runEvent.SetDistance(distance);
+    runEvent.SetHeartRate(heartRate);
+    runEvent.SetNotes(notes);
+    runEvent.SetMonth(month);
+    runEvent.SetDay(day);
+    runEvent.SetTrainingWeek(trainingWeek);
+    runEvent.SetTime(duration);
+    runEvent.CalculateSpeed();
+
+    //For testing purposes, output created event to dummyRepo file.
+        outFile<< runEvent.GetType() << " ; ";
+        outFile<< runEvent.GetMonth() << " ; ";
+        outFile<< runEvent.GetDay() << " ; ";
+        outFile<< runEvent.GetTrainingWeek() << " ; ";
+        outFile<< runEvent.GetTime() << " ; ";
+        outFile<< runEvent.GetDistance() << " ; ";
+        outFile<< fixed;
+        outFile<< setprecision(2) << runEvent.GetSpeed() << " ; ";
+        outFile<< runEvent.GetHeartRate() << " ; ";
+        outFile<< runEvent.GetNotes() << " ; \n";
+        
+        outFile.close();
+
 
     TrainingMenu();
 
@@ -449,12 +572,26 @@ void RunData() {
 }
 
 void BikeData() {
-    string heartRate;
-    string distance;
+    EventT bikeEvent(B, numEvents);
+    string useCurrentDate;
+    string userHeartRate;
+    string userDistance;
     string notes;
-    string speed;
-    string date;
-    string duration;
+    string userMonth;
+    string userDay;
+    string userTrainingWeek;
+    string userDuration;
+    int day;
+    int month;
+    int trainingWeek;
+    int duration;
+    float distance;
+    int heartRate;
+    vector<int> validDays;
+
+    //for testing purposes, will remove when user repositories are implemented
+    ofstream outFile;
+    outFile.open("dummyRepo.txt");
 
     cout << R"(
                              _     _ _        
@@ -467,32 +604,140 @@ void BikeData() {
     cout << "-----------------------------------------------------------------------------" << endl;
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Enter swim training data: " << endl;
+    cout << '\t' << '\t'<<'\t'<<"Enter bike training data: " << endl;
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Date of Workout (dd/mm/yy): ";
-    cin >> date;
-    cout << endl;
+   /********** Date **********/
+    cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+    cin >> useCurrentDate;
+    while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+        cin >> useCurrentDate;
+    }
 
+    if(useCurrentDate == "Y" or useCurrentDate == "y"){
+        month = GetLocalMonthOrDay(1);
+        day = GetLocalMonthOrDay(2);
+        cout << endl;
+    }else{
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+        cin >> userMonth;
+
+        //Validate userMonth
+        while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
+        userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
+            cout << endl;
+            cout << '\t'<< '\t' << "   Invalid month. Please try again." << endl;
+            cout << endl;
+            cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+            cin>> userMonth;
+        }
+        cout << endl;
+        month = atoi(userMonth.c_str());
+
+        //Set the days of the entered month for validating userDay
+        SetMonthDays(validDays, month);
+
+        cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+        cin >> userDay;
+
+        //Validate userDay
+        while(!DayIsValid(validDays, userDay)){
+            cout << endl;
+            cout << '\t'<< '\t' << "   Invalid day. Please try again." << endl;
+            cout << endl;
+            cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+            cin>> userDay;
+        }
+        cout << endl;
+        day = atoi(userDay.c_str());
+    }
+
+    /********** Training Week Number **********/
+    cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+    cin >> userTrainingWeek;
+    while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid training week number. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+        cin >> userTrainingWeek;
+    }
+    cout << endl;
+    trainingWeek = atoi(userTrainingWeek.c_str());
+
+    /********** Duration **********/
     cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
-    cin >> duration;
+    cin >> userDuration;
+    while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid duration. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+        cin >> userDuration;
+    }
     cout << endl;
+    duration = atoi(userDuration.c_str());
 
+    /********** Distance **********/
     cout << '\t' << '\t'<<'\t'<<"Total Distance (miles): ";
-    cin >> distance;
+    cin >> userDistance;
+    while(userDistance.length() == 0 or !IsAFloat(userDistance)){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid distance. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Total Distance (miles)):  ";
+        cin >> userDistance;
+    }
     cout << endl;
+    distance = stof(userDistance);
     
-    cout << '\t' << '\t'<<'\t'<<"Workout Speed (mph): ";
-    cin >> speed;
-    cout << endl;
-
+    /********** Heart Rate **********/
     cout << '\t' << '\t'<<'\t'<<"Heart Rate: ";
-    cin >> heartRate;
+    cin >> userHeartRate;
+    while(!IsValidHR(userHeartRate)){
+        cout << endl;
+        cout << '\t'<< '\t'<< "   Invalid heart rate. Please try again." << endl;
+        cout << endl;
+        cout << '\t' << '\t'<<'\t'<<"Heart Rate:  ";
+        cin >> userHeartRate;
+    }
+    cout << endl;
+    heartRate = atoi(userHeartRate.c_str());
+
+    /********** Notes ***********/
+    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
+    cin.ignore(100, '\n');
+    getline(cin, notes);
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
-    cin >> notes;
-    cout << endl;
+    //set the run EventT attributes and eventually write event to userREPO file.
+    bikeEvent.SetDistance(distance);
+    bikeEvent.SetHeartRate(heartRate);
+    bikeEvent.SetNotes(notes);
+    bikeEvent.SetMonth(month);
+    bikeEvent.SetDay(day);
+    bikeEvent.SetTrainingWeek(trainingWeek);
+    bikeEvent.SetTime(duration);
+    bikeEvent.CalculateSpeed();
+
+    //For testing purposes, output created event to dummyRepo file.
+        outFile<< bikeEvent.GetType() << " ; ";
+        outFile<< bikeEvent.GetMonth() << " ; ";
+        outFile<< bikeEvent.GetDay() << " ; ";
+        outFile<< bikeEvent.GetTrainingWeek() << " ; ";
+        outFile<< bikeEvent.GetTime() << " ; ";
+        outFile<< bikeEvent.GetDistance() << " ; ";
+        outFile<< fixed;
+        outFile<< setprecision(2) << bikeEvent.GetSpeed() << " ; ";
+        outFile<< bikeEvent.GetHeartRate() << " ; ";
+        outFile<< bikeEvent.GetNotes() << " ; \n";
+        
+        outFile.close();
 
     TrainingMenu();
 
@@ -692,8 +937,13 @@ bool IsAFloat(string& str){
         if(!ContainsOnlyNumbers(str)){
             rv = false;
         }else{
-            str.append(".00");
-            rv = true;
+            compare = atoi(str.c_str());
+            if(compare == 0 or compare > 10){
+                rv = false;
+            }else{
+                str.append(".00");
+                rv = true;
+            }
         }
     }else{
         beforePeriod = str.substr(0, decimalPos);
@@ -703,7 +953,7 @@ bool IsAFloat(string& str){
             rv = false;
         }else{
             compare = atoi(beforePeriod.c_str());
-            if(compare <= 10){                      //checking distance for reasonableness, if not return false
+            if(compare <= 10 and compare != 0){                      //checking distance for reasonableness, if not return false
                 if(afterPeriod.length() > 2){
                     round = afterPeriod.substr(0, 3);
                     
@@ -735,6 +985,7 @@ bool IsAFloat(string& str){
             }
         }   
     }
+    
     return rv;
 }
 
