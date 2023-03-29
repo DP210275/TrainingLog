@@ -4,6 +4,7 @@
 #include <ctime>        //for getting current month/day
 #include <stdlib.h>     //for atoi function
 #include <iomanip>      //for setprecision
+#include <limits>       //for numeric_limits in ValidInput()
 
 #include "userT.h"
 #include "userListT.h"
@@ -12,11 +13,13 @@
 using namespace std;
 
 int numEvents = 0;
+vector<EventT> userEvents;
 
 void LoginUser();
 bool Search(string name);
 void OutputChoices();
 int GetUserSelection();
+int ValidInput();
 void TrainingMenu();
 void SwimData();
 void RunData();
@@ -125,7 +128,7 @@ int GetUserSelection() {
     cout << endl;
     cout << '\t'<<'\t'<< "     What would you like to select?";
     cout << '\t' ;
-    cin >> userChoice;
+    userChoice = ValidInput();
     cout << endl;
 
     if (userChoice == 1) {
@@ -157,6 +160,24 @@ int GetUserSelection() {
     return userChoice;
 }
 
+int ValidInput()
+{
+    int x;
+    cin >> x;
+    while(cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout << endl;
+        cout <<  '\t'<<'\t'<< "    Invalid selection. Please try again.";
+        cout << endl << endl;
+        cout << '\t'<<'\t'<< "     What would you like to select?";
+        cout << '\t' ;
+        cin >> x;
+    }
+    return x;
+}
+
 void TrainingMenu() {
     int trainingChoice;
 
@@ -182,7 +203,7 @@ void TrainingMenu() {
     cout << "Selection: ";
     cout << '\t' ;
 
-    cin >> trainingChoice;
+    trainingChoice = ValidInput();
     cout << endl << endl;
     cout << "-----------------------------------------------------------------------------";
     cout << endl;
@@ -240,8 +261,8 @@ void SwimData() {
     vector<int> validDays;
     
     //for testing purposes, will remove when user repositories are implemented
-    ofstream outFile;
-    outFile.open("dummyRepo.txt");
+    //ofstream outFile;
+    //outFile.open("dummyRepo.txt");
 
 
     cout << R"(
@@ -378,7 +399,10 @@ void SwimData() {
     swimEvent.SetTime(duration);
     swimEvent.CalculateSpeed();
 
+    userEvents.push_back(swimEvent);
+
     //For testing purposes, output created event to dummyRepo file.
+    /*
         outFile<< swimEvent.GetType() << " ; ";
         outFile<< swimEvent.GetMonth() << " ; ";
         outFile<< swimEvent.GetDay() << " ; ";
@@ -391,6 +415,7 @@ void SwimData() {
         outFile<< swimEvent.GetNotes() << " ; \n";
         
         outFile.close();
+    */
 
     TrainingMenu();
 
@@ -415,8 +440,8 @@ void RunData() {
     vector<int> validDays;
 
     //for testing purposes, will remove when user repositories are implemented
-    ofstream outFile;
-    outFile.open("dummyRepo.txt");
+    //ofstream outFile;
+    //outFile.open("dummyRepo.txt");
 
     cout << R"(
 
@@ -551,7 +576,10 @@ void RunData() {
     runEvent.SetTime(duration);
     runEvent.CalculateSpeed();
 
+    userEvents.push_back(runEvent);
+
     //For testing purposes, output created event to dummyRepo file.
+    /*
         outFile<< runEvent.GetType() << " ; ";
         outFile<< runEvent.GetMonth() << " ; ";
         outFile<< runEvent.GetDay() << " ; ";
@@ -564,7 +592,7 @@ void RunData() {
         outFile<< runEvent.GetNotes() << " ; \n";
         
         outFile.close();
-
+    */
 
     TrainingMenu();
 
@@ -590,8 +618,8 @@ void BikeData() {
     vector<int> validDays;
 
     //for testing purposes, will remove when user repositories are implemented
-    ofstream outFile;
-    outFile.open("dummyRepo.txt");
+    //ofstream outFile;
+    //outFile.open("dummyRepo.txt");
 
     cout << R"(
                              _     _ _        
@@ -725,7 +753,10 @@ void BikeData() {
     bikeEvent.SetTime(duration);
     bikeEvent.CalculateSpeed();
 
+    userEvents.push_back(bikeEvent);
+
     //For testing purposes, output created event to dummyRepo file.
+    /*
         outFile<< bikeEvent.GetType() << " ; ";
         outFile<< bikeEvent.GetMonth() << " ; ";
         outFile<< bikeEvent.GetDay() << " ; ";
@@ -738,7 +769,7 @@ void BikeData() {
         outFile<< bikeEvent.GetNotes() << " ; \n";
         
         outFile.close();
-
+    */
     TrainingMenu();
 
 }
@@ -768,7 +799,7 @@ void DataAnalysis() {
     cout << '\t'<<'\t'<<"Selection: ";
    
 
-    cin >> dataAnalysisChoice;
+    dataAnalysisChoice = ValidInput();
     cout << endl;
 
     if (dataAnalysisChoice == 1) {
@@ -788,7 +819,7 @@ void DataAnalysis() {
 
         cout << '\t'<<'\t'<< '\t'<< "Selection: ";
         cout << '\t' ;
-        cin >> dataAnalysisChoice;
+        dataAnalysisChoice = ValidInput();
         cout << endl;
         
         if (dataAnalysisChoice == 1) {
@@ -806,17 +837,164 @@ void DataAnalysis() {
 }
 
 void GetMean() {
+    int trainingWeekChoice = 0;
+    string userEventType;
+    string logEventType = "X";
+    string matchingEventType;
+    vector<EventT> matchingTWEvents;
+    vector<EventT> matchingTWAndTypeEvents;
+    bool noEvents = false;
+    float avgHR = 0.0;
+    float avgTime = 0.0;
+    float avgDist = 0.0;
+    float avgSpeed = 0.0;
+    float totalDist = 0.0;
+    int totalHR = 0;
+    int totalTime = 0;
+    float totalSpeed = 0.0;
+    float amtEvents = 0.0;
+
+
     cout << "-----------------------------------------------------------------------------" << endl;
 
-    cout << '\t' << "Mean:" << endl;
+    /*
+        What to do here:
+            - Ask the user for what training week they would like to evaluate
+            - Walk through vector of events and put events with matching training week number (TWN) into new vector
+            - If no events have the trianing week number inputted by the user
+                Then output "Sorry, no events have that training week number. please try again" or something
+            - otherwise
+                > calculate mean HR, time, distance, speed for each event
+                    (step through new vector, grab those things and add them together, and divide by the number of events)
+                > Output mean and return to DataAnalysis menu
 
+        Future enhancements to this function:
+            - Ask user what event they'd like the average of (S/B/R/All)
+                > If S, only get Swim events. If B, only bike events. If R, only run events. If A/all/All, use all events
+            - Allow user to enter multiple weeks for the average
+                > Ask user for first TWN
+                > Then ask if they want to enter another TWN for calculation (a Y/N)
+                > If Y, loop the following steps until N received:
+                    - Ask user for TWN
+                    - Ask if they want to enter another TWN (Y/N)
+            - Put in some bar graphs?        
+    */
 
+    //Check if there are any events for the user. If not, return to Data Analytics menu
+    if(userEvents.size() == 0){
+        cout << '\t' << '\t' << "Sorry, no events have been logged yet." << endl;
+        cout << '\t' << '\t' << "Please log an event before trying to calculate the mean." << endl;
+    }else{
+        do{
+            if(noEvents){
+                cout << '\t' << '\t' << "     Sorry, no logged events have that training week number." << endl;
+                cout << '\t' << '\t' << "     Please try again." << endl;
+            }
+        
+            cout << '\t'<< '\t'<<"   Please enter the training week number for evaluation." << endl;
+            cout << endl;
+            cout << '\t' << '\t' << '\t' << "Selection: ";
+            trainingWeekChoice = ValidInput();
+
+            //Get the events from the user's list of logged events that match the given training week number
+            for(size_t i = 0; i < userEvents.size(); i++){
+                if(userEvents[i].GetTrainingWeek() == trainingWeekChoice){
+                    matchingTWEvents.push_back(userEvents[i]);
+                }
+            }
+
+            if(matchingTWEvents.size() == 0){
+                noEvents = true;
+            }
+        }while(matchingTWEvents.size() == 0);
+
+        //Ask what kind of events the user would like to analyze
+        cout << '\t' << '\t' << "    Please enter the type of event for evaluation (S/B/R/All)." << endl << endl;
+        cout << '\t' << '\t' << '\t' << "Selection: ";
+        cin.ignore(100, '\n');
+        getline(cin, userEventType);
+        cout << endl;
+
+        if(isalpha(userEventType[0])){
+            logEventType = char(toupper(userEventType[0]));
+        }
+
+        while(logEventType != "S" and logEventType != "B" and logEventType != "R" and logEventType != "A"){
+            cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+            cout << endl;
+            cout << '\t'<<'\t'<< '\t'<< "Selection: ";
+            cout << '\t' ;
+            cin.ignore(100, '\n');
+            getline(cin, userEventType);
+            cout << endl;
+
+            if(isalpha(userEventType[0])){
+                logEventType = char(toupper(userEventType[0]));
+            }
+        }
+        
+        if(logEventType == "S"){
+            matchingEventType = "Swim";
+        }else if(logEventType == "B"){
+            matchingEventType = "Bike";
+        }else if(logEventType == "R"){
+            matchingEventType = "Run";
+        }else if(logEventType == "A"){
+            matchingEventType = "All";
+        }
+
+        if(matchingEventType != "All"){
+            for(size_t i = 0; i < matchingTWEvents.size(); i++){
+                if(matchingTWEvents[i].GetType() == matchingEventType){
+                    matchingTWAndTypeEvents.push_back(matchingTWEvents[i]);
+                }
+            }
+        }else{
+            for(size_t j = 0; j < matchingTWEvents.size(); j++){
+                matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
+            }
+        }
+
+        for(size_t k = 0; k < matchingTWAndTypeEvents.size(); k++){
+            totalHR += matchingTWAndTypeEvents[k].GetHeartRate();
+            totalDist += matchingTWAndTypeEvents[k].GetDistance();
+            totalSpeed += matchingTWAndTypeEvents[k].GetSpeed();
+            totalTime += matchingTWAndTypeEvents[k].GetTime();
+        }   
+
+        amtEvents = float(matchingTWAndTypeEvents.size());
+        avgHR = float(totalHR)/amtEvents;
+        avgDist = totalDist/amtEvents;
+        avgSpeed = totalSpeed/amtEvents;
+        avgTime = float(totalTime)/amtEvents;
+
+        cout << fixed;
+        cout << setprecision(2) << endl;
+        cout << '\t' << '\t' << "For Training Week " << trainingWeekChoice << ": " << endl;
+        cout << '\t' << '\t' << '\t' << "Average Heart Rate: " << avgHR << "bpm" << endl;
+        cout << '\t' << '\t' << '\t' << "Average Distance: " << avgDist << " miles" <<endl;
+        cout << '\t' << '\t'<< '\t' << "Average Time: " << avgTime << " minutes" << endl;
+        cout << '\t' << '\t'<< '\t' << "Average Speed: " << avgSpeed << "mph" << endl;
+        cout << endl;
+
+    }
     DataAnalysis();
 }
 
 
 void GetMax() {
     cout << "-----------------------------------------------------------------------------" << endl;
+
+    /*
+        What to do here:
+            - Ask the user for what training week they would like to evaluate
+            - Walk through vector of events and put events with matching training week # into new vector
+            - If no events have the trianing week number inputted by the user
+                Then output "Sorry, no events have that training week number. please try again" or something
+            - otherwise
+                > Walk through new vector and find the max HR, time, distance, and speed for that week
+                > Output these and return to data analysis menu
+    */    
 
     cout << '\t' << "Max:" << endl;
     
@@ -826,6 +1004,11 @@ void GetMax() {
 
 void GetOverall() {
     cout << "-----------------------------------------------------------------------------" << endl;
+
+    /*
+        What to do here:
+            Maybe somehow do a graph of some sort? 
+    */    
 
     cout << '\t' << "Overall performance:" << endl;
 
