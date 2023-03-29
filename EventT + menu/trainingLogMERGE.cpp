@@ -126,8 +126,7 @@ int GetUserSelection() {
     int userChoice;
 
     cout << endl;
-    cout << '\t'<<'\t'<< "     What would you like to select?";
-    cout << '\t' ;
+    cout << '\t'<<'\t'<< '\t' << "   Selection: ";
     userChoice = ValidInput();
     cout << endl;
 
@@ -143,8 +142,7 @@ int GetUserSelection() {
         cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
         cout << endl;
 
-        cout << '\t'<<'\t'<< "     What would you like to select?";
-        cout << '\t' ;
+        cout << '\t'<<'\t'<< '\t' << "   Selection: ";
         cin >> userChoice;
         cout << endl;
 
@@ -169,10 +167,9 @@ int ValidInput()
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
         cout << endl;
-        cout <<  '\t'<<'\t'<< "    Invalid selection. Please try again.";
+        cout <<  '\t'<<'\t'<< "   Invalid selection. Please try again.";
         cout << endl << endl;
-        cout << '\t'<<'\t'<< "     What would you like to select?";
-        cout << '\t' ;
+        cout << '\t'<<'\t'<< '\t' << "Selection: ";
         cin >> x;
     }
     return x;
@@ -858,18 +855,8 @@ void GetMean() {
     cout << "-----------------------------------------------------------------------------" << endl;
 
     /*
-        What to do here:
-            - Ask the user for what training week they would like to evaluate
-            - Walk through vector of events and put events with matching training week number (TWN) into new vector
-            - If no events have the trianing week number inputted by the user
-                Then output "Sorry, no events have that training week number. please try again" or something
-            - otherwise
-                > calculate mean HR, time, distance, speed for each event
-                    (step through new vector, grab those things and add them together, and divide by the number of events)
-                > Output mean and return to DataAnalysis menu
-
-        Future enhancements to this function:
-            - Ask user what event they'd like the average of (S/B/R/All)
+        Future enhancements to this function: (*** means it has been implemented)
+            ***- Ask user what event they'd like the average of (S/B/R/All)
                 > If S, only get Swim events. If B, only bike events. If R, only run events. If A/all/All, use all events
             - Allow user to enter multiple weeks for the average
                 > Ask user for first TWN
@@ -882,19 +869,20 @@ void GetMean() {
 
     //Check if there are any events for the user. If not, return to Data Analytics menu
     if(userEvents.size() == 0){
-        cout << '\t' << '\t' << "Sorry, no events have been logged yet." << endl;
-        cout << '\t' << '\t' << "Please log an event before trying to calculate the mean." << endl;
+        cout << '\t' << '\t' << "   Sorry, no events have been logged yet." << endl;
+        cout << '\t' << '\t' << "   Please log an event before trying to calculate the mean." << endl;
     }else{
         do{
             if(noEvents){
-                cout << '\t' << '\t' << "     Sorry, no logged events have that training week number." << endl;
-                cout << '\t' << '\t' << "     Please try again." << endl;
+                cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
+                cout << '\t' << '\t' << "   Please try again." << endl << endl;
             }
         
             cout << '\t'<< '\t'<<"   Please enter the training week number for evaluation." << endl;
             cout << endl;
             cout << '\t' << '\t' << '\t' << "Selection: ";
             trainingWeekChoice = ValidInput();
+            cout << endl;
 
             //Get the events from the user's list of logged events that match the given training week number
             for(size_t i = 0; i < userEvents.size(); i++){
@@ -908,41 +896,35 @@ void GetMean() {
             }
         }while(matchingTWEvents.size() == 0);
 
-        //Ask what kind of events the user would like to analyze
-        cout << '\t' << '\t' << "    Please enter the type of event for evaluation (S/B/R/All)." << endl << endl;
+        //Ask what kind of events the user would like to analyze, and validate user response
+        cout << '\t' << '\t' << "   Please enter the type of event for evaluation (S/B/R/All)." << endl << endl;
         cout << '\t' << '\t' << '\t' << "Selection: ";
-        cin.ignore(100, '\n');
-        getline(cin, userEventType);
+        cin >> userEventType;
+        cin.ignore(100,'\n');
         cout << endl;
 
-        if(isalpha(userEventType[0])){
-            logEventType = char(toupper(userEventType[0]));
-        }
-
-        while(logEventType != "S" and logEventType != "B" and logEventType != "R" and logEventType != "A"){
+        while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
+                userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
             cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
             cout << endl;
             cout << '\t'<<'\t'<< '\t'<< "Selection: ";
-            cout << '\t' ;
+            cin >> userEventType;
             cin.ignore(100, '\n');
-            getline(cin, userEventType);
-            cout << endl;
-
-            if(isalpha(userEventType[0])){
-                logEventType = char(toupper(userEventType[0]));
-            }
         }
+
+        logEventType = userEventType[0];
         
-        if(logEventType == "S"){
+        if(logEventType == "S" or logEventType == "s"){
             matchingEventType = "Swim";
-        }else if(logEventType == "B"){
+        }else if(logEventType == "B" or logEventType == "b"){
             matchingEventType = "Bike";
-        }else if(logEventType == "R"){
+        }else if(logEventType == "R" or logEventType == "r"){
             matchingEventType = "Run";
-        }else if(logEventType == "A"){
+        }else if(logEventType == "A" or logEventType == "a"){
             matchingEventType = "All";
         }
 
+        //If the user wants a specific event analyzed, find the events with the matching training week and put them in a separate vector
         if(matchingEventType != "All"){
             for(size_t i = 0; i < matchingTWEvents.size(); i++){
                 if(matchingTWEvents[i].GetType() == matchingEventType){
@@ -950,11 +932,13 @@ void GetMean() {
                 }
             }
         }else{
+            //Otherwise just copy the separate vector
             for(size_t j = 0; j < matchingTWEvents.size(); j++){
                 matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
             }
         }
 
+        //Calculate the totals for heart rate, distance, speed, and time and average them
         for(size_t k = 0; k < matchingTWAndTypeEvents.size(); k++){
             totalHR += matchingTWAndTypeEvents[k].GetHeartRate();
             totalDist += matchingTWAndTypeEvents[k].GetDistance();
