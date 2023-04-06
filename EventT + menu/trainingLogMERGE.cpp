@@ -31,12 +31,10 @@ void GetOverall();
 int GetLocalMonthOrDay(int control);
 void SetMonthDays(vector<int>&days, int mon);
 bool DayIsValid(vector<int>& days, string day);
-bool FindDay(vector<int>& vec, int key);
+bool Find(vector<int> vec, int key);
 bool ContainsOnlyNumbers(const string& str);
 bool IsAFloat(string& str);
 bool IsValidHR(string resp);
-bool FindMatchingTW(int key);
-void FillTrainingWeeks(vector<int>& tws);
 
 int main() {
 
@@ -95,32 +93,32 @@ bool Search(string name){
 
 void OutputChoices() {
     cout << R"(                                                               
-                                              ████                  ████      
-                                              ████                  ████      
-              ████                        ▓▓▓▓                ▓▓  ▓▓          
-      ██████  ████                      ▓▓▓▓▓▓▓▓            ██  ▓▓▓▓▓▓██      
-    ██      ████  ████████          ██▓▓▓▓    ▓▓██        ██    ▓▓▓▓    ████  
-        ▓▓██▓▓██▓▓                ████          ████          ▓▓▓▓▓▓▓▓        
-  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ██    ██      ██    ██      ██▓▓    ▓▓████    
-                                ██    ██      ██    ██    ████          ██    
-                                  ████          ████      ██            ████  
+                                                 ████                  ████      
+                                                 ████                  ████      
+                 ████                        ▓▓▓▓                ▓▓  ▓▓          
+         ██████  ████                      ▓▓▓▓▓▓▓▓            ██  ▓▓▓▓▓▓██      
+       ██      ████  ████████          ██▓▓▓▓    ▓▓██        ██    ▓▓▓▓    ████  
+           ▓▓██▓▓██▓▓                ████          ████          ▓▓▓▓▓▓▓▓        
+     ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ██    ██      ██    ██      ██▓▓    ▓▓████    
+                                   ██    ██      ██    ██    ████          ██    
+                                     ████          ████      ██            ████  
         )" << '\n';
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<"   Welcome to your Triathlon Training Log! " << endl;
+    cout << '\t'<< '\t'<< '\t'<< "Welcome to your Triathlon Training Log! " << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<'\t'<<"Enter 1 for Training Log" << endl;
+    cout << '\t'<< '\t'<<'\t'<< '\t'<< "Enter 1 for Training Log" << endl;
     cout << endl;
  
-    cout << '\t'<< '\t'<< '\t'<< "Enter 2 for Data Analysis" << endl;
+    cout << '\t'<< '\t'<< '\t'<< '\t'<< "Enter 2 for Data Analysis" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<< '\t'<< "Enter 3 to Exit" << endl;
+    cout << '\t'<< '\t'<< '\t'<< '\t'<< "Enter 3 to Exit" << endl;
     cout << endl;
 
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
 
 }
 
@@ -128,7 +126,7 @@ int GetUserSelection() {
     int userChoice;
 
     cout << endl;
-    cout << '\t'<<'\t'<< '\t' << "   Selection: ";
+    cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
     userChoice = ValidInput();
     cout << endl;
 
@@ -141,10 +139,10 @@ int GetUserSelection() {
     } 
     
     while (userChoice <= 0 || userChoice > 3) {
-        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
         cout << endl;
 
-        cout << '\t'<<'\t'<< '\t' << "   Selection: ";
+        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
         cin >> userChoice;
         cout << endl;
 
@@ -169,9 +167,9 @@ int ValidInput()
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
         cout << endl;
-        cout <<  '\t'<<'\t'<< "   Invalid selection. Please try again.";
+        cout << '\t'<< '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
         cout << endl << endl;
-        cout << '\t'<<'\t'<< '\t' << "Selection: ";
+        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
         cin >> x;
     }
     return x;
@@ -180,32 +178,33 @@ int ValidInput()
 void TrainingMenu() {
     int trainingChoice;
 
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<'\t'<<'\t'<< "Training Log" << endl;
+    cout << '\t'<< '\t'<<'\t'<<'\t'<< "     Training Log" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<'\t'<<"Enter 1 to log a swim training" << endl;
+    cout << '\t'<< '\t'<<'\t'<< "    Enter 1 to log a swim training" << endl;
     cout << endl;
 
-    cout << '\t'<<'\t'<<'\t'<< "Enter 2 to log a run training" << endl;
+    cout << '\t'<<'\t'<<'\t'<< "    Enter 2 to log a run training" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<'\t'<<"Enter 3 to log a bike training" << endl;
+    cout << '\t'<< '\t'<<'\t'<< "    Enter 3 to log a bike training" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<'\t'<<"Enter 4 to go back to the Main Menu" << endl;
+    cout << '\t'<< '\t'<<'\t'<< "    Enter 4 to go back to the Main Menu" << endl;
     cout << endl;
     cout << '\t'<< '\t'<<'\t';
 
-    cout << "Selection: ";
+    cout << "    Selection: ";
     cout << '\t' ;
+
 
     trainingChoice = ValidInput();
     cout << endl << endl;
-    cout << "-----------------------------------------------------------------------------";
-    cout << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
+    //cout << endl;
 
     if (trainingChoice == 1) {
         SwimData();
@@ -219,11 +218,10 @@ void TrainingMenu() {
     }
 
     while (trainingChoice <= 0 || trainingChoice > 3) {
-        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
         cout << endl;
 
-        cout << '\t'<<'\t'<< '\t'<< "Selection: ";
-        cout << '\t' ;
+        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
         cin >> trainingChoice;
         cout << endl;
 
@@ -265,29 +263,29 @@ void SwimData() {
 
 
     cout << R"(
-                                      _                                  
-                                     (_)                         
-                         _____      ___ _ __ ___  
-                        / __\ \ /\ / / | '_ ` _ \
-                        \__ \\ V  V /| | | | | | |
-                        |___/ \_/\_/ |_|_| |_| |_|
+                                            _                                  
+                                           (_)                         
+                               _____      ___ _ __ ___  
+                              / __\ \ /\ / / | '_ ` _ \
+                              \__ \\ V  V /| | | | | | |
+                              |___/ \_/\_/ |_|_| |_| |_|
                                   
         )" << '\n';
 
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Enter swim training data: " << endl;
+    cout << '\t' << '\t'<<'\t'<<"       Enter swim training data: " << endl;
     cout << endl;
 
     /********** Date **********/
-    cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+    cout << '\t' << '\t'<<'\t'<<"       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
     while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t'<< "       **Invalid selection. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+        cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
     }
     
@@ -297,16 +295,16 @@ void SwimData() {
         cout << endl;
     }else{
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+        cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
         cin >> userMonth;
 
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
         userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
             cout << endl;
-            cout << '\t'<< '\t' << "   Invalid month. Please try again." << endl;
+            cout << '\t'<< '\t' << '\t' << "       **Invalid month. Please try again.**" << endl;
             cout << endl;
-            cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+            cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
         }
         cout << endl;
@@ -315,15 +313,15 @@ void SwimData() {
         //Set the days of the entered month for validating userDay
         SetMonthDays(validDays, month);
 
-        cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+        cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
         cin >> userDay;
 
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
             cout << endl;
-            cout << '\t'<< '\t' << "   Invalid day. Please try again." << endl;
+            cout << '\t'<< '\t' << '\t' << "       **Invalid day. Please try again.**" << endl;
             cout << endl;
-            cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+            cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
         }
         cout << endl;
@@ -331,59 +329,59 @@ void SwimData() {
     }
 
     /********** Training Week Number **********/
-    cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+    cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid training week number. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid Training Week Number. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+        cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
 
     /********** Duration **********/
-    cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+    cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid duration. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid duration. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
 
     /********** Distance **********/
-    cout << '\t' << '\t'<<'\t'<<"Total Distance (miles): ";
+    cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid distance. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid distance. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Total Distance (miles)):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
     }
     cout << endl;
     distance = stof(userDistance);
 
     /********** Heart Rate **********/
-    cout << '\t' << '\t'<<'\t'<<"Heart Rate: ";
+    cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
     while(!IsValidHR(userHeartRate)){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid heart rate. Please try again." << endl;
+        cout << '\t'<< '\t'<<'\t' << "       **Invalid heart rate. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Heart Rate:  ";
+        cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
 
     /********** Notes ***********/
-    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
+    cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
     cin.ignore(100, '\n');
     getline(cin, notes);
     cout << endl;
@@ -444,27 +442,27 @@ void RunData() {
 
     cout << R"(
 
-                             _ __ _   _ _ __  
-                            | '__| | | | '_ \
-                            | |  | |_| | | | |
-                            |_|   \__,_|_| |_|
+                                  _ __ _   _ _ __  
+                                 | '__| | | | '_ \
+                                 | |  | |_| | | | |
+                                 |_|   \__,_|_| |_|
                                   
         )" << '\n';
 
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Enter run training data: " << endl;
+    cout << '\t' << '\t'<<'\t'<<"       Enter run training data: " << endl;
     cout << endl;
 
     /********** Date **********/
-    cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+    cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
     while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << '\t'<< '\t'<<'\t'<< "       **Invalid selection. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+        cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
     }
 
@@ -474,16 +472,16 @@ void RunData() {
         cout << endl;
     }else{
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+        cout << '\t' << '\t'<<'\t'<<"      Month of Workout (1-12): ";
         cin >> userMonth;
 
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
         userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
             cout << endl;
-            cout << '\t'<< '\t' << "   Invalid month. Please try again." << endl;
+            cout << '\t'<< '\t' << '\t' << "       **Invalid month. Please try again.**" << endl;
             cout << endl;
-            cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+            cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
         }
         cout << endl;
@@ -492,15 +490,15 @@ void RunData() {
         //Set the days of the entered month for validating userDay
         SetMonthDays(validDays, month);
 
-        cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+        cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
         cin >> userDay;
 
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
             cout << endl;
-            cout << '\t'<< '\t' << "   Invalid day. Please try again." << endl;
+            cout << '\t'<< '\t' << '\t' << "       **Invalid day. Please try again.**" << endl;
             cout << endl;
-            cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+            cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
         }
         cout << endl;
@@ -508,59 +506,59 @@ void RunData() {
     }
 
     /********** Training Week Number **********/
-    cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+    cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid training week number. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid training week number. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+        cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
 
     /********** Duration **********/
-    cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+    cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid duration. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid duration. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
 
     /********** Distance **********/
-    cout << '\t' << '\t'<<'\t'<<"Total Distance (miles): ";
+    cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid distance. Please try again." << endl;
+        cout << '\t'<< '\t'<<'\t' << "       **Invalid distance. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Total Distance (miles)):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles)):  ";
         cin >> userDistance;
     }
     cout << endl;
     distance = stof(userDistance);
 
     /********** Heart Rate **********/
-    cout << '\t' << '\t'<<'\t'<<"Heart Rate: ";
+    cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
     while(!IsValidHR(userHeartRate)){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid heart rate. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid heart rate. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Heart Rate:  ";
+        cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
 
     /********** Notes ***********/
-    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
+    cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
     cin.ignore(100, '\n');
     getline(cin, notes);
     cout << endl;
@@ -621,27 +619,27 @@ void BikeData() {
     //outFile.open("dummyRepo.txt");
 
     cout << R"(
-                             _     _ _        
-                            | |   (_) |       
-                            | |__  _| | _____ 
-                            | '_ \| | |/ / _ \
-                            | |_) | |   <  __/
-                            |_.__/|_|_|\_\___|
+                                   _     _ _        
+                                 | |   (_) |       
+                                 | |__  _| | _____ 
+                                 | '_ \| | |/ / _ \
+                                 | |_) | |   <  __/
+                                 |_.__/|_|_|\_\___|
         )" << '\n';
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
     cout << endl;
 
-    cout << '\t' << '\t'<<'\t'<<"Enter bike training data: " << endl;
+    cout << '\t' << '\t'<<'\t'<<"       Enter bike training data: " << endl;
     cout << endl;
 
    /********** Date **********/
-    cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+    cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
     while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
+        cout << '\t'<< '\t'<<'\t'<< "       **Invalid selection. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<< "Use Current Date (Y/N): ";
+        cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
     }
 
@@ -651,16 +649,16 @@ void BikeData() {
         cout << endl;
     }else{
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+        cout << '\t' << '\t'<<'\t'<<"      Month of Workout (1-12): ";
         cin >> userMonth;
 
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
         userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
             cout << endl;
-            cout << '\t'<< '\t' << "   Invalid month. Please try again." << endl;
+            cout << '\t'<< '\t' << '\t' << "       **Invalid month. Please try again.**" << endl;
             cout << endl;
-            cout << '\t' << '\t'<<'\t'<<"Month of Workout (1-12): ";
+            cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
         }
         cout << endl;
@@ -669,15 +667,15 @@ void BikeData() {
         //Set the days of the entered month for validating userDay
         SetMonthDays(validDays, month);
 
-        cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+        cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
         cin >> userDay;
 
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
             cout << endl;
-            cout << '\t'<< '\t' << "   Invalid day. Please try again." << endl;
+            cout << '\t'<< '\t' << '\t' << "       **Invalid day. Please try again." << endl;
             cout << endl;
-            cout << '\t' << '\t'<<'\t'<<"Day of Workout: ";
+            cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
         }
         cout << endl;
@@ -685,59 +683,59 @@ void BikeData() {
     }
 
     /********** Training Week Number **********/
-    cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+    cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid training week number. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid training week number. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Training Week Number:  ";
+        cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
 
     /********** Duration **********/
-    cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+    cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid duration. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid duration. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Workout Duration (minutes):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
 
     /********** Distance **********/
-    cout << '\t' << '\t'<<'\t'<<"Total Distance (miles): ";
+    cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid distance. Please try again." << endl;
+        cout << '\t'<< '\t'<<'\t' << "       **Invalid distance. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Total Distance (miles)):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles)):  ";
         cin >> userDistance;
     }
     cout << endl;
     distance = stof(userDistance);
     
     /********** Heart Rate **********/
-    cout << '\t' << '\t'<<'\t'<<"Heart Rate: ";
+    cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
     while(!IsValidHR(userHeartRate)){
         cout << endl;
-        cout << '\t'<< '\t'<< "   Invalid heart rate. Please try again." << endl;
+        cout << '\t'<< '\t'<< '\t' << "       **Invalid heart rate. Please try again.**" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"Heart Rate:  ";
+        cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
 
     /********** Notes ***********/
-    cout << '\t' << '\t'<<'\t'<<"Notes: "; 
+    cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
     cin.ignore(100, '\n');
     getline(cin, notes);
     cout << endl;
@@ -840,14 +838,9 @@ void GetMean() {
     string userEventType;
     string logEventType = "X";
     string matchingEventType;
-    string enterAnotherTW;
     vector<EventT> matchingTWEvents;
     vector<EventT> matchingTWAndTypeEvents;
-    vector<int> trainingWeekChoices;
-    vector<int> allUserTWs;
-    //bool noEvents = false;
-    bool keepGettingTWs = true;
-    bool validTW;
+    bool noEvents = false;
     float avgHR = 0.0;
     float avgTime = 0.0;
     float avgDist = 0.0;
@@ -864,103 +857,57 @@ void GetMean() {
     /*
         Future enhancements to this function: (*** means it has been implemented)
             ***- Ask user what event they'd like the average of (S/B/R/All)
-            ***- Allow user to enter multiple weeks for the average
+                > If S, only get Swim events. If B, only bike events. If R, only run events. If A/all/All, use all events
+            - Allow user to enter multiple weeks for the average
+                > Ask user for first TWN
+                > Then ask if they want to enter another TWN for calculation (a Y/N)
+                > If Y, loop the following steps until N received:
+                    - Ask user for TWN
+                    - Ask if they want to enter another TWN (Y/N)
             - Put in some bar graphs?        
     */
 
     //Check if there are any events for the user. If not, return to Data Analytics menu
     if(userEvents.size() == 0){
-        cout << '\t' << '\t' << "   Sorry, no events have been logged yet." << endl;
-        cout << '\t' << '\t' << "   Please log an event before trying to calculate the mean." << endl;
+        cout << endl;
+        cout << '\t' << "    Whoops! It looks like there are no events logged yet." << endl; 
+        cout << endl;
+        cout << '\t' << "  Please log an event before trying to calculate the mean." << endl;
+        cout << endl;
     }else{
-        FillTrainingWeeks(allUserTWs);
+        do{
+            if(noEvents){
+                cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
+                cout << '\t' << '\t' << "   Please try again." << endl << endl;
+            }
         
-        cout << '\t'<< '\t'<<"   Please enter the training week number for evaluation." << endl;
-        cout << endl;
-        cout << '\t' << '\t' << '\t' << "Selection: ";
-        trainingWeekChoice = ValidInput();
-        cout << endl;
-
-        //Check the user's logged events for matching training week, if no events are found with that TW, get another TW
-        while(!FindMatchingTW(trainingWeekChoice)){
-            cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
-            cout << '\t' << '\t' << "   Please try again." << endl << endl;
             cout << '\t'<< '\t'<<"   Please enter the training week number for evaluation." << endl;
             cout << endl;
             cout << '\t' << '\t' << '\t' << "Selection: ";
             trainingWeekChoice = ValidInput();
             cout << endl;
-        }
 
-        trainingWeekChoices.push_back(trainingWeekChoice);
-
-        while(keepGettingTWs){
-            validTW = false;
-            cout << '\t' << '\t' << "   Enter another training week? (Y/N): ";
-            cin >> enterAnotherTW;
-            cin.ignore(100, '\n');
-
-            while(enterAnotherTW[0] != 'Y' and enterAnotherTW[0] != 'y' and enterAnotherTW[0] != 'N' and enterAnotherTW[0] != 'n'){
-                cout << endl;
-                cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
-                cout << endl;
-                cout << '\t' << '\t'<< "   Enter another training week? (Y/N): ";
-                cin >> enterAnotherTW;
-                cin.ignore(100, '\n');
-            }
-            cout << endl;
-
-            //The user wants to enter another training week
-            if(enterAnotherTW[0] == 'Y' or enterAnotherTW[0] == 'y'){
-                if(allUserTWs.size() == 1){
-                    cout << '\t' << "   You have only logged events for one week so analyzing week " << trainingWeekChoice << "." << endl << endl;
-                    keepGettingTWs = false;
-                }else if(allUserTWs.size() == trainingWeekChoices.size()){
-                    cout << '\t' << "   There are no more training weeks you can analyze." << endl << endl;
-                    keepGettingTWs = false;
-                }else{
-                    while(!validTW){
-                        cout << '\t'<< '\t'<<"   Please enter the training week number for evaluation." << endl;
-                        cout << endl;
-                        cout << '\t' << '\t' << '\t' << "Selection: ";
-                        trainingWeekChoice = ValidInput();
-                        cout << endl;
-
-                        if(!FindMatchingTW(trainingWeekChoice)){
-                            cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
-                            cout << '\t' << '\t' << "   Please try again." << endl << endl;
-                        }else if(FindDay(trainingWeekChoices, trainingWeekChoice)){
-                            cout << '\t' << '\t' << "   Sorry, you've already selected that training week number." << endl;
-                            cout << '\t' << '\t' << "   Please try again." << endl << endl;
-                        }else{
-                            validTW = true;
-                        }
-                    }
-                    trainingWeekChoices.push_back(trainingWeekChoice);
-                }
-            }else if(enterAnotherTW[0] == 'N' or enterAnotherTW[0] == 'n'){
-                keepGettingTWs = false;
-            }
-        }
-            
-        //Get the events from the user's list of logged events that match the given training week number
-        for(size_t i = 0; i < trainingWeekChoices.size(); i++){
-            for(size_t s = 0; s < userEvents.size(); s++){
-                if(userEvents[s].GetTrainingWeek() == trainingWeekChoices[i]){
-                    matchingTWEvents.push_back(userEvents[s]);
+            //Get the events from the user's list of logged events that match the given training week number
+            for(size_t i = 0; i < userEvents.size(); i++){
+                if(userEvents[i].GetTrainingWeek() == trainingWeekChoice){
+                    matchingTWEvents.push_back(userEvents[i]);
                 }
             }
-        }
+
+            if(matchingTWEvents.size() == 0){
+                noEvents = true;
+            }
+        }while(matchingTWEvents.size() == 0);
 
         //Ask what kind of events the user would like to analyze, and validate user response
         cout << '\t' << '\t' << "   Please enter the type of event for evaluation (S/B/R/All)." << endl << endl;
         cout << '\t' << '\t' << '\t' << "Selection: ";
         cin >> userEventType;
         cin.ignore(100,'\n');
-        
+        cout << endl;
+
         while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
                 userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
-            cout << endl;
             cout << '\t'<< '\t'<< "   Invalid selection. Please try again." << endl;
             cout << endl;
             cout << '\t'<<'\t'<< '\t'<< "Selection: ";
@@ -1002,25 +949,21 @@ void GetMean() {
             totalTime += matchingTWAndTypeEvents[k].GetTime();
         }   
 
-        if(matchingTWAndTypeEvents.size() > 0){
-            amtEvents = float(matchingTWAndTypeEvents.size());
-            avgHR = float(totalHR)/amtEvents;
-            avgDist = totalDist/amtEvents;
-            avgSpeed = totalSpeed/amtEvents;
-            avgTime = float(totalTime)/amtEvents;
+        amtEvents = float(matchingTWAndTypeEvents.size());
+        avgHR = float(totalHR)/amtEvents;
+        avgDist = totalDist/amtEvents;
+        avgSpeed = totalSpeed/amtEvents;
+        avgTime = float(totalTime)/amtEvents;
 
-            cout << fixed;
-            cout << setprecision(2) << endl;
-            cout << '\t' << '\t' << "For Training Week " << trainingWeekChoice << ": " << endl;
-            cout << '\t' << '\t' << '\t' << "Average Heart Rate: " << avgHR << "bpm" << endl;
-            cout << '\t' << '\t' << '\t' << "Average Distance: " << avgDist << " miles" <<endl;
-            cout << '\t' << '\t'<< '\t' << "Average Time: " << avgTime << " minutes" << endl;
-            cout << '\t' << '\t'<< '\t' << "Average Speed: " << avgSpeed << "mph" << endl;
-            cout << endl;
-        }else{
-            cout << endl;
-            cout << '\t' << '\t' << "No " << matchingEventType << " events logged. Please log events for analyzing." << endl << endl;
-        }
+        cout << fixed;
+        cout << setprecision(2) << endl;
+        cout << '\t' << '\t' << "For Training Week " << trainingWeekChoice << ": " << endl;
+        cout << '\t' << '\t' << '\t' << "Average Heart Rate: " << avgHR << "bpm" << endl;
+        cout << '\t' << '\t' << '\t' << "Average Distance: " << avgDist << " miles" <<endl;
+        cout << '\t' << '\t'<< '\t' << "Average Time: " << avgTime << " minutes" << endl;
+        cout << '\t' << '\t'<< '\t' << "Average Speed: " << avgSpeed << "mph" << endl;
+        cout << endl;
+
     }
     DataAnalysis();
 }
@@ -1115,7 +1058,7 @@ bool DayIsValid(vector<int>& days, string day){
             dayInt = atoi(day.c_str());
 
             //See if the number given by the user is a valid day of the specific month input previously
-            if(!FindDay(days, dayInt)){
+            if(!Find(days, dayInt)){
                 isValid = false;
             }
         }
@@ -1126,7 +1069,7 @@ bool DayIsValid(vector<int>& days, string day){
     return isValid;
 }
 
-bool FindDay(vector<int>& vec, int key){
+bool Find(vector<int> vec, int key){
     bool found = false;
 
     for(size_t i = 0; i < vec.size(); i++){
@@ -1229,24 +1172,4 @@ bool IsValidHR(string resp){
     }
 
     return isValid;
-}
-
-bool FindMatchingTW(int key){
-    bool trainingWeekMatches = false;
-    for(size_t i = 0; i < userEvents.size(); i++){
-        if(userEvents[i].GetTrainingWeek() == key){
-            trainingWeekMatches = true;
-        }
-    }
-
-    return trainingWeekMatches;
-}
-
-void FillTrainingWeeks(vector<int>& tws){
-    for(size_t i = 0; i < userEvents.size(); i++){
-        if(!FindDay(tws, userEvents[i].GetTrainingWeek())){
-            tws.push_back(userEvents[i].GetTrainingWeek());
-        }
-    }
-    return;
 }
