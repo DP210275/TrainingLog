@@ -285,16 +285,18 @@ void SwimData() {
     /********** Date **********/
     cout << '\t' << '\t'<<'\t'<<"       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
-    while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
+    cin.ignore(100, '\n');
+    while(useCurrentDate[0] != 'Y' and useCurrentDate[0] != 'y' and useCurrentDate[0] != 'N' and useCurrentDate[0] != 'n'){
         cout << endl;
         cout << endl;
         cout << '\t'<< '\t'<< '\t'<< "** Invalid selection. Please try again. **" << endl;
         cout << endl;
         cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
+        cin.ignore(100, '\n');
     }
     
-    if(useCurrentDate == "Y" or useCurrentDate == "y"){
+    if(useCurrentDate[0] == 'Y' or useCurrentDate[0] == 'y'){
         month = GetLocalMonthOrDay(1);
         day = GetLocalMonthOrDay(2);
         cout << endl;
@@ -302,6 +304,7 @@ void SwimData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
         cin >> userMonth;
+        cin.ignore(100, '\n');
 
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
@@ -312,6 +315,7 @@ void SwimData() {
             cout << endl;
             cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
+            cin.ignore(100, '\n');
         }
         cout << endl;
         month = atoi(userMonth.c_str());
@@ -321,6 +325,7 @@ void SwimData() {
 
         cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
         cin >> userDay;
+        cin.ignore(100, '\n');
 
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
@@ -330,6 +335,7 @@ void SwimData() {
             cout << endl;
             cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
+            cin.ignore(100,'\n');
         }
         cout << endl;
         day = atoi(userDay.c_str());
@@ -338,6 +344,7 @@ void SwimData() {
     /********** Training Week Number **********/
     cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
+    cin.ignore(100, '\n');
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
         cout << endl;
@@ -345,6 +352,7 @@ void SwimData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
@@ -352,6 +360,7 @@ void SwimData() {
     /********** Duration **********/
     cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
+    cin.ignore(100, '\n');
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << endl;
@@ -359,6 +368,7 @@ void SwimData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
@@ -366,6 +376,7 @@ void SwimData() {
     /********** Distance **********/
     cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
+    cin.ignore(100, '\n');
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
         cout << endl;
@@ -373,6 +384,7 @@ void SwimData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     distance = stof(userDistance);
@@ -380,6 +392,7 @@ void SwimData() {
     /********** Heart Rate **********/
     cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
+    cin.ignore(100, '\n');
     while(!IsValidHR(userHeartRate)){
         cout << endl;
         cout << endl;
@@ -387,13 +400,13 @@ void SwimData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
 
     /********** Notes ***********/
     cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
-    cin.ignore(100, '\n');
     getline(cin, notes);
     cout << endl;
 
@@ -469,16 +482,18 @@ void RunData() {
     /********** Date **********/
     cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
-    while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
+    cin.ignore(100, '\n');
+    while(useCurrentDate[0] != 'Y' and useCurrentDate[0] != 'y' and useCurrentDate[0] != 'N' and useCurrentDate[0] != 'n'){
         cout << endl;
         cout << endl;
         cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
         cout << endl;
         cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
+        cin.ignore(100, '\n');
     }
 
-    if(useCurrentDate == "Y" or useCurrentDate == "y"){
+    if(useCurrentDate[0] == 'Y' or useCurrentDate[0] == 'y'){
         month = GetLocalMonthOrDay(1);
         day = GetLocalMonthOrDay(2);
         cout << endl;
@@ -486,6 +501,7 @@ void RunData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"      Month of Workout (1-12): ";
         cin >> userMonth;
+        cin.ignore(100, '\n');
 
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
@@ -496,6 +512,7 @@ void RunData() {
             cout << endl;
             cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
+            cin.ignore(100, '\n');
         }
         cout << endl;
         month = atoi(userMonth.c_str());
@@ -505,6 +522,7 @@ void RunData() {
 
         cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
         cin >> userDay;
+        cin.ignore(100, '\n');
 
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
@@ -514,6 +532,7 @@ void RunData() {
             cout << endl;
             cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
+            cin.ignore(100, '\n');
         }
         cout << endl;
         day = atoi(userDay.c_str());
@@ -522,6 +541,7 @@ void RunData() {
     /********** Training Week Number **********/
     cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
+    cin.ignore(100, '\n');
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
         cout << endl;
@@ -529,6 +549,7 @@ void RunData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
@@ -536,6 +557,7 @@ void RunData() {
     /********** Duration **********/
     cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
+    cin.ignore(100, '\n');
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << endl;
@@ -543,6 +565,7 @@ void RunData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
@@ -550,13 +573,15 @@ void RunData() {
     /********** Distance **********/
     cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
+    cin.ignore(100, '\n');
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
         cout << endl;
         cout << '\t'<< '\t'<<'\t' << "** Invalid distance. Please try again. **" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles)):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     distance = stof(userDistance);
@@ -564,6 +589,7 @@ void RunData() {
     /********** Heart Rate **********/
     cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
+    cin.ignore(100, '\n');
     while(!IsValidHR(userHeartRate)){
         cout << endl;
         cout << endl;
@@ -571,13 +597,13 @@ void RunData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
 
     /********** Notes ***********/
     cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
-    cin.ignore(100, '\n');
     getline(cin, notes);
     cout << endl;
 
@@ -653,16 +679,18 @@ void BikeData() {
    /********** Date **********/
     cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
-    while(useCurrentDate != "Y" and useCurrentDate != "y" and useCurrentDate != "N" and useCurrentDate != "n"){
+    cin.ignore(100, '\n');
+    while(useCurrentDate[0] != 'Y' and useCurrentDate[0] != 'y' and useCurrentDate[0] != 'N' and useCurrentDate[0] != 'n'){
         cout << endl;
         cout << endl;
         cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
         cout << endl;
         cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
+        cin.ignore(100, '\n');
     }
 
-    if(useCurrentDate == "Y" or useCurrentDate == "y"){
+   if(useCurrentDate[0] == 'Y' or useCurrentDate[0] == 'y'){
         month = GetLocalMonthOrDay(1);
         day = GetLocalMonthOrDay(2);
         cout << endl;
@@ -670,6 +698,7 @@ void BikeData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"      Month of Workout (1-12): ";
         cin >> userMonth;
+        cin.ignore(100, '\n');
 
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
@@ -680,6 +709,7 @@ void BikeData() {
             cout << endl;
             cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
+            cin.ignore(100, '\n');
         }
         cout << endl;
         month = atoi(userMonth.c_str());
@@ -689,6 +719,7 @@ void BikeData() {
 
         cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
         cin >> userDay;
+        cin.ignore(100, '\n');
 
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
@@ -698,6 +729,7 @@ void BikeData() {
             cout << endl;
             cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
+            cin.ignore(100, '\n');
         }
         cout << endl;
         day = atoi(userDay.c_str());
@@ -706,6 +738,7 @@ void BikeData() {
     /********** Training Week Number **********/
     cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
+    cin.ignore(100, '\n');
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
         cout << endl;
@@ -713,6 +746,7 @@ void BikeData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
@@ -720,6 +754,7 @@ void BikeData() {
     /********** Duration **********/
     cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
+    cin.ignore(100, '\n');
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << endl;
@@ -727,6 +762,7 @@ void BikeData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
@@ -734,13 +770,15 @@ void BikeData() {
     /********** Distance **********/
     cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
+    cin.ignore(100, '\n');
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
         cout << endl;
         cout << '\t'<< '\t'<<'\t' << "** Invalid distance. Please try again. **" << endl;
         cout << endl;
-        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles)):  ";
+        cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     distance = stof(userDistance);
@@ -748,6 +786,7 @@ void BikeData() {
     /********** Heart Rate **********/
     cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
+    cin.ignore(100, '\n');
     while(!IsValidHR(userHeartRate)){
         cout << endl;
         cout << endl;
@@ -755,13 +794,13 @@ void BikeData() {
         cout << endl;
         cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
+        cin.ignore(100, '\n');
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
 
     /********** Notes ***********/
     cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
-    cin.ignore(100, '\n');
     getline(cin, notes);
     cout << endl;
 
@@ -841,7 +880,6 @@ void DataAnalysis() {
         cout << endl;
 
         cout << '\t'<<'\t'<< '\t' <<'\t' << "    Selection: ";
-
         dataAnalysisChoice = ValidInput();
         cout << endl;
         
@@ -882,7 +920,7 @@ void GetMean() {
     float amtEvents = 0.0;
 
 
-    cout << "--------------------------------------------------------------------------------------" << endl;
+    cout << "-----------------------------------------------------------------------------" << endl;
 
     /*
         Future enhancements to this function: (*** means it has been implemented)
@@ -979,13 +1017,9 @@ void GetMean() {
         cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
         cout << endl;
         cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
-
-
         cin >> userEventType;
         cin.ignore(100,'\n');
         cout << endl;
-
-        cout << "--------------------------------------------------------------------------------------" << endl;
 
         while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
                 userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
@@ -1057,7 +1091,7 @@ void GetMean() {
 
 
 void GetMax() {
-    cout << "--------------------------------------------------------------------------------------" << endl;
+    cout << "-----------------------------------------------------------------------------" << endl;
 
     /*
         What to do here:
@@ -1077,7 +1111,7 @@ void GetMax() {
 }
 
 void GetOverall() {
-    cout << "--------------------------------------------------------------------------------------" << endl;
+    cout << "-----------------------------------------------------------------------------" << endl;
 
     /*
         What to do here:
@@ -1185,7 +1219,8 @@ bool ContainsOnlyNumbers(const string& str){
 bool IsAFloat(string& str){
     size_t decimalPos = str.find(".");
     bool rv;
-    string beforePeriod;
+    bool onlyZeros = true;
+    string beforePeriod = "0";
     string afterPeriod;
     string round;
     int compare;
@@ -1199,6 +1234,44 @@ bool IsAFloat(string& str){
                 rv = false;
             }else{
                 str.append(".00");
+                rv = true;
+            }
+        }
+    }else if(decimalPos == 0){
+        afterPeriod = str.substr(decimalPos+1);
+        if(!ContainsOnlyNumbers(afterPeriod)){
+            rv = false;
+        }else{
+            //Check for a case like ".00" (invalid)
+            for(size_t i = 0; i < afterPeriod.length(); i++){
+                if(afterPeriod[i] != '0'){
+                    onlyZeros = false;
+                }
+            }
+            if(onlyZeros){
+                rv = false;
+            }else{
+                if(afterPeriod.length() > 2){
+                    round = afterPeriod.substr(0, 3);
+
+                    //Case for rounding up
+                    if(round[2] == '5' or round[2] == '6' or round[2] == '7' or round[2] == '8' or round[2] == '9'){
+                        compare = atoi(round.substr(0,2).c_str());
+                        compare++;                        
+                    }else{
+                        compare = atoi(round.substr(0,2).c_str());
+                    }
+                    afterPeriod = to_string(compare);
+
+                    //If there was a whole number round up (.995 --> 1.00)
+                    if(afterPeriod == "100"){   
+                        afterPeriod = "00";
+                        compare = stoi(beforePeriod);
+                        compare++;
+                        beforePeriod = to_string(compare);
+                    }
+                }
+                str = beforePeriod + "." + afterPeriod;
                 rv = true;
             }
         }
@@ -1223,7 +1296,7 @@ bool IsAFloat(string& str){
                     }
                     afterPeriod = to_string(compare);
 
-                    //If there was a round where .99 became 1.00
+                    //If there was a whole number round (1.995 --> 2.00)
                     if(afterPeriod == "100"){   
                         afterPeriod = "00";
                         compare = stoi(beforePeriod);
