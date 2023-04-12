@@ -903,12 +903,14 @@ void GetMean() {
     string logEventType = "X";
     string matchingEventType;
     string enterAnotherTW;
+    string getQuickAverage;
     vector<EventT> matchingTWEvents;
     vector<EventT> matchingTWAndTypeEvents;
     vector<int> trainingWeekChoices;
     vector<int> allUserTWs;
     bool keepGettingTWs = true;
     bool validTW;
+    bool wantQuickAverage = false;
     float avgHR = 0.0;
     float avgTime = 0.0;
     float avgDist = 0.0;
@@ -918,6 +920,7 @@ void GetMean() {
     int totalTime = 0;
     float totalSpeed = 0.0;
     float amtEvents = 0.0;
+    size_t size;
 
 
     cout << "-----------------------------------------------------------------------------" << endl;
@@ -926,6 +929,7 @@ void GetMean() {
         Future enhancements to this function: (*** means it has been implemented)
             ***- Ask user what event they'd like the average of (S/B/R/All)
             ***- Allow user to enter multiple weeks for the average
+            - Give user option at beginning to just get average of all weeks for all events
             - Put in some bar graphs?        
     */
 
@@ -938,122 +942,144 @@ void GetMean() {
         cout << endl;
     }else{
         FillTrainingWeeks(allUserTWs);
-        
+
+        //Ask user if they want all events for all weeks
         cout << endl;
-        cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
-        cout << endl;
-        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
-        trainingWeekChoice = ValidInput();
-        cout << endl;
-
-        trainingWeekChoices.push_back(trainingWeekChoice);
-
-        while(keepGettingTWs){
-            validTW = false;
-            cout << '\t' << '\t' << '\t' <<"Enter another training week? (Y/N): ";
-            cin >> enterAnotherTW;
-            cin.ignore(100, '\n');
-
-            while(enterAnotherTW[0] != 'Y' and enterAnotherTW[0] != 'y' and enterAnotherTW[0] != 'N' and enterAnotherTW[0] != 'n'){
-                cout << endl;
-                cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-                cout << endl;
-                cout << '\t' << '\t'<< '\t' <<"Enter another training week? (Y/N): ";
-                cin >> enterAnotherTW;
-                cin.ignore(100, '\n'); 
-            }
-            cout << endl;
-
-            if(enterAnotherTW[0] == 'Y' or enterAnotherTW[0] == 'y'){
-                if(allUserTWs.size() == 1){
-                    cout << endl;
-                    cout << '\t' <<'\t' << "   You have only logged events for one week so analyzing week " << trainingWeekChoice << "." << endl << endl;
-                    keepGettingTWs = false;
-                }else if(allUserTWs.size() == trainingWeekChoices.size()){
-                    cout << endl;
-                    cout << '\t' << '\t' << "     There are no more training weeks you can analyze." << endl;
-                    cout << endl;
-                    keepGettingTWs = false;
-                }else{
-                    while(!validTW){
-                        cout << endl;
-                        cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
-                        cout << endl;
-                        cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
-                        trainingWeekChoice = ValidInput();
-                        cout << endl;
-
-                        if(!FindMatchingTW(trainingWeekChoice)){
-                            cout << endl;
-                            cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
-                            cout << '\t' << '\t' << "   Please try again." << endl;
-                            cout << endl;
-                        }else if(FindDay(trainingWeekChoices, trainingWeekChoice)){
-                            cout << '\t' << '\t' << "   Whoops! You've alrady selected that training week number." << endl;
-                            cout << '\t' << '\t' << "   Please try again." << endl;
-                            cout << endl;
-                        }else{
-                            validTW = true;
-                        }
-                    }
-                    trainingWeekChoices.push_back(trainingWeekChoice);
-                }
-            }else if(enterAnotherTW[0] == 'N' or enterAnotherTW[0] == 'n'){
-                keepGettingTWs = false;
-            }
-        }
-
-        for(size_t i = 0; i < trainingWeekChoices.size(); i++){
-            for(size_t s = 0; s < userEvents.size(); s++){
-                if(userEvents[s].GetTrainingWeek() == trainingWeekChoices[i]){
-                    matchingTWEvents.push_back(userEvents[s]);
-                }
-            }
-        }
-
-        //Ask what kind of events the user would like to analyze, and validate user response
-        cout << endl;
-        cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
-        cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
-        cout << endl;
-        cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
-        cin >> userEventType;
-        cin.ignore(100,'\n');
-        cout << endl;
-
-        while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
-                userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
+        cout << '\t' <<"Would you like to get the average of all events for all weeks? (Y/N): ";
+        cin >> getQuickAverage;
+        cin.ignore(100, '\n');
+        while(getQuickAverage[0] != 'Y' and getQuickAverage[0] != 'y' and getQuickAverage[0] != 'N' and getQuickAverage[0] != 'n'){
             cout << endl;
             cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
             cout << endl;
-            cout << '\t'<<'\t'<< '\t'<< '\t'<< "Selection: ";
-            cin >> userEventType;
-            cin.ignore(100, '\n');
+            cout << '\t' << '\t'<<"Get the average of all events for all weeks? (Y/N): ";
+            cin >> getQuickAverage;
+            cin.ignore(100, '\n'); 
         }
-
-        logEventType = userEventType[0];
         
-        if(logEventType == "S" or logEventType == "s"){
-            matchingEventType = "Swim";
-        }else if(logEventType == "B" or logEventType == "b"){
-            matchingEventType = "Bike";
-        }else if(logEventType == "R" or logEventType == "r"){
-            matchingEventType = "Run";
-        }else if(logEventType == "A" or logEventType == "a"){
-            matchingEventType = "All";
-        }
-
-        //If the user wants a specific event analyzed, find the events with the matching training week and put them in a separate vector
-        if(matchingEventType != "All"){
-            for(size_t i = 0; i < matchingTWEvents.size(); i++){
-                if(matchingTWEvents[i].GetType() == matchingEventType){
-                    matchingTWAndTypeEvents.push_back(matchingTWEvents[i]);
-                }
+        if(getQuickAverage[0] == 'Y' or getQuickAverage[0] == 'y'){
+            //put all events into vector
+            wantQuickAverage = true;
+            for(size_t r = 0; r < userEvents.size(); r++){
+                matchingTWAndTypeEvents.push_back(userEvents[r]);
             }
         }else{
-            //Otherwise just copy the separate vector
-            for(size_t j = 0; j < matchingTWEvents.size(); j++){
-                matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
+            cout << endl;
+            cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
+            cout << endl;
+            cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
+            trainingWeekChoice = ValidInput();
+            cout << endl;
+
+            trainingWeekChoices.push_back(trainingWeekChoice);
+
+            while(keepGettingTWs){
+                validTW = false;
+                cout << '\t' << '\t' << '\t' <<"Enter another training week? (Y/N): ";
+                cin >> enterAnotherTW;
+                cin.ignore(100, '\n');
+
+                while(enterAnotherTW[0] != 'Y' and enterAnotherTW[0] != 'y' and enterAnotherTW[0] != 'N' and enterAnotherTW[0] != 'n'){
+                    cout << endl;
+                    cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                    cout << endl;
+                    cout << '\t' << '\t'<< '\t' <<"Enter another training week? (Y/N): ";
+                    cin >> enterAnotherTW;
+                    cin.ignore(100, '\n'); 
+                }   
+                cout << endl;
+
+                if(enterAnotherTW[0] == 'Y' or enterAnotherTW[0] == 'y'){
+                    if(allUserTWs.size() == 1){
+                        cout << endl;
+                        cout << '\t' <<'\t' << "   You have only logged events for one week so analyzing week " << trainingWeekChoice << "." << endl << endl;
+                        keepGettingTWs = false;
+                    }else if(allUserTWs.size() == trainingWeekChoices.size()){
+                        cout << endl;
+                        cout << '\t' << '\t' << "     There are no more training weeks you can analyze." << endl;
+                        cout << endl;
+                        keepGettingTWs = false;
+                    }else{
+                        while(!validTW){
+                            cout << endl;
+                            cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
+                            cout << endl;
+                            cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
+                            trainingWeekChoice = ValidInput();
+                            cout << endl;
+
+                            if(!FindMatchingTW(trainingWeekChoice)){
+                                cout << endl;
+                                cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
+                                cout << '\t' << '\t' << "   Please try again." << endl;
+                                cout << endl;
+                            }else if(FindDay(trainingWeekChoices, trainingWeekChoice)){
+                                cout << '\t' << '\t' << "   Whoops! You've alrady selected that training week number." << endl;
+                                cout << '\t' << '\t' << "   Please try again." << endl;
+                                cout << endl;
+                            }else{
+                                validTW = true;
+                            }
+                        }
+                        trainingWeekChoices.push_back(trainingWeekChoice);
+                    }
+                }else if(enterAnotherTW[0] == 'N' or enterAnotherTW[0] == 'n'){
+                    keepGettingTWs = false;
+                }
+            }
+        
+            for(size_t i = 0; i < trainingWeekChoices.size(); i++){
+                for(size_t s = 0; s < userEvents.size(); s++){
+                    if(userEvents[s].GetTrainingWeek() == trainingWeekChoices[i]){
+                        matchingTWEvents.push_back(userEvents[s]);
+                    }   
+                }   
+            }
+
+            //Ask what kind of events the user would like to analyze, and validate user response
+            cout << endl;
+            cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
+            cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
+            cout << endl;
+            cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
+            cin >> userEventType;
+            cin.ignore(100,'\n');
+            cout << endl;
+
+            while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
+                    userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
+                cout << endl;
+                cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                cout << endl;
+                cout << '\t'<<'\t'<< '\t'<< '\t'<< "Selection: ";
+                cin >> userEventType;
+                cin.ignore(100, '\n');
+            }
+
+            logEventType = userEventType[0];
+        
+            if(logEventType == "S" or logEventType == "s"){
+                matchingEventType = "Swim";
+            }else if(logEventType == "B" or logEventType == "b"){
+                matchingEventType = "Bike";
+            }else if(logEventType == "R" or logEventType == "r"){
+                matchingEventType = "Run";
+            }else if(logEventType == "A" or logEventType == "a"){
+                matchingEventType = "All";
+            }
+
+            //If the user wants a specific event analyzed, find the events with the matching training week and put them in a separate vector
+            if(matchingEventType != "All"){
+                for(size_t i = 0; i < matchingTWEvents.size(); i++){
+                    if(matchingTWEvents[i].GetType() == matchingEventType){
+                        matchingTWAndTypeEvents.push_back(matchingTWEvents[i]);
+                    }
+                }
+            }else{
+                //Otherwise just copy the separate vector
+                for(size_t j = 0; j < matchingTWEvents.size(); j++){
+                    matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
+                }
             }
         }
 
@@ -1074,7 +1100,18 @@ void GetMean() {
 
             cout << fixed;
             cout << setprecision(2) << endl;
-            cout << '\t' << '\t' << '\t' << '\t' << "     For Training Week " << trainingWeekChoice << ": " << endl << endl;
+            if(wantQuickAverage){
+                cout << '\t' << '\t' << '\t' << '\t' << "     For All Training Weeks:" << endl << endl;
+            }else if(trainingWeekChoices.size() == 1){
+                cout << '\t' << '\t' << '\t' << '\t' << "     For Training Week " << trainingWeekChoice << ": " << endl << endl;
+            }else{
+                size = trainingWeekChoices.size();
+                cout << '\t' << '\t' << '\t' << '\t' << "     For Training Weeks ";
+                for(size_t t = 0; t < trainingWeekChoices.size()-1; t++){
+                    cout << trainingWeekChoices[t] << ", ";
+                }
+                cout << trainingWeekChoices[size-1] << ": " << endl << endl;
+            }
             cout << '\t' << '\t' << '\t' <<  '\t' << "Average Heart Rate: " << avgHR << "bpm" << endl << endl;
             cout << '\t' << '\t' << '\t' << '\t' << "Average Distance: " << avgDist << " miles" <<endl << endl;
             cout << '\t' << '\t'<< '\t' << '\t' << "Average Time: " << avgTime << " minutes" << endl << endl;
