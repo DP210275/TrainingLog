@@ -663,7 +663,7 @@ void BikeData() {
     //outFile.open("dummyRepo.txt");
 
     cout << R"(
-                                   _     _ _        
+                                  _     _ _        
                                  | |   (_) |       
                                  | |__  _| | _____ 
                                  | '_ \| | |/ / _ \
@@ -923,7 +923,7 @@ void GetMean() {
     size_t size;
 
 
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
 
     /*
         Future enhancements to this function: (*** means it has been implemented)
@@ -947,6 +947,8 @@ void GetMean() {
         cout << endl;
         cout << '\t' <<"Would you like to get the average of all events for all weeks? (Y/N): ";
         cin >> getQuickAverage;
+        cout << endl;
+        cout << endl;
         cin.ignore(100, '\n');
         while(getQuickAverage[0] != 'Y' and getQuickAverage[0] != 'y' and getQuickAverage[0] != 'N' and getQuickAverage[0] != 'n'){
             cout << endl;
@@ -1128,7 +1130,7 @@ void GetMean() {
 
 
 void GetMax() {
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
 
     /*
         What to do here:
@@ -1148,7 +1150,7 @@ void GetMax() {
 }
 
 void GetOverall() {
-    cout << "-----------------------------------------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
 
     /*
         What to do here:
