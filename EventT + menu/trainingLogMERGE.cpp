@@ -37,6 +37,7 @@ bool IsAFloat(string& str);
 bool IsValidHR(string resp);
 bool FindMatchingTW(int key);
 void FillTrainingWeeks(vector<int>& tws);
+bool CheckForExit(string input, int control);
 
 int main() {
 
@@ -253,12 +254,15 @@ void SwimData() {
     string userDay;
     string userTrainingWeek;
     string userDuration;
+    string checkNotesForExit;
+    string confirmExit;
     int day;
     int month;
     int trainingWeek;
     int duration;
     float distance;
     int heartRate;
+    bool wantToExit = false;
     vector<int> validDays;
     
     //for testing purposes, will remove when user repositories are implemented
@@ -282,18 +286,34 @@ void SwimData() {
     cout << '\t' << '\t'<<'\t'<<"       Enter swim training data: " << endl;
     cout << endl;
 
+    cout << '\t' << '\t'<<"   Enter \"Exit\" at any time to exit the logging process." << endl;
+    cout << endl;
+
     /********** Date **********/
     cout << '\t' << '\t'<<'\t'<<"       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(useCurrentDate, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(useCurrentDate[0] != 'Y' and useCurrentDate[0] != 'y' and useCurrentDate[0] != 'N' and useCurrentDate[0] != 'n'){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t'<< "** Invalid selection. Please try again. **" << endl;
-        cout << endl;
+        if(useCurrentDate != "exit"){
+            cout << '\t'<< '\t'<< '\t'<< "** Invalid selection. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(useCurrentDate, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     
     if(useCurrentDate[0] == 'Y' or useCurrentDate[0] == 'y'){
@@ -306,16 +326,27 @@ void SwimData() {
         cin >> userMonth;
         cin.ignore(100, '\n');
 
+        wantToExit = CheckForExit(userMonth, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
         userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
             cout << endl;
             cout << endl;
-            cout << '\t'<< '\t' << '\t' << "** Invalid month. Please try again. **" << endl;
-            cout << endl;
+            if(userMonth != "exit"){
+                cout << '\t'<< '\t' << '\t' << "** Invalid month. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
             cin.ignore(100, '\n');
+
+            wantToExit = CheckForExit(userMonth, 1);
+            if(wantToExit){
+                TrainingMenu();
+            }
         }
         cout << endl;
         month = atoi(userMonth.c_str());
@@ -327,15 +358,27 @@ void SwimData() {
         cin >> userDay;
         cin.ignore(100, '\n');
 
+        wantToExit = CheckForExit(userDay, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
             cout << endl;
             cout << endl;
-            cout << '\t'<< '\t' << '\t' << "** Invalid day. Please try again. **" << endl;
-            cout << endl;
+            if(userDay != "exit"){
+                cout << '\t'<< '\t' << '\t' << "** Invalid day. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
             cin.ignore(100,'\n');
+
+            wantToExit = CheckForExit(userDay, 1);
+            if(wantToExit){
+                TrainingMenu();
+            }
         }
         cout << endl;
         day = atoi(userDay.c_str());
@@ -345,14 +388,27 @@ void SwimData() {
     cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userTrainingWeek, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid number. Please try again. **" << endl;
-        cout << endl;
+        if(userTrainingWeek != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid number. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
         cin.ignore(100, '\n');
+        
+        wantToExit = CheckForExit(userTrainingWeek, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
@@ -361,14 +417,27 @@ void SwimData() {
     cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userDuration, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid duration. Please try again. **" << endl;
-        cout << endl;
+        if(userDuration != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid duration. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userDuration, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
@@ -377,14 +446,27 @@ void SwimData() {
     cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userDistance, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid distance. Please try again. **" << endl;
-        cout << endl;
+        if(userDistance != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid distance. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userDistance, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     distance = stof(userDistance);
@@ -393,14 +475,27 @@ void SwimData() {
     cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userHeartRate, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!IsValidHR(userHeartRate)){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<<'\t' << "** Invalid heart rate. Please try again. **" << endl;
-        cout << endl;
+        if(userHeartRate!= "exit"){
+            cout << '\t'<< '\t'<<'\t' << "** Invalid heart rate. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userHeartRate, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
@@ -408,6 +503,22 @@ void SwimData() {
     /********** Notes ***********/
     cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
     getline(cin, notes);
+
+    checkNotesForExit = notes.substr(0, 4);
+    wantToExit = CheckForExit(checkNotesForExit, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+    while(checkNotesForExit == "exit"){
+        cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
+        getline(cin, notes);
+
+        checkNotesForExit = notes.substr(0, 4);
+        wantToExit = CheckForExit(checkNotesForExit, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+    }
     cout << endl;
 
     //set the swim EventT attributes and eventually write event to userREPO file.
@@ -452,12 +563,14 @@ void RunData() {
     string userDay;
     string userTrainingWeek;
     string userDuration;
+    string checkNotesForExit;
     int day;
     int month;
     int trainingWeek;
     int duration;
     float distance;
     int heartRate;
+    bool wantToExit = false;
     vector<int> validDays;
 
     //for testing purposes, will remove when user repositories are implemented
@@ -479,18 +592,34 @@ void RunData() {
     cout << '\t' << '\t'<<'\t'<<"       Enter run training data: " << endl;
     cout << endl;
 
+    cout << '\t' << '\t'<<"   Enter \"Exit\" at any time to exit the logging process." << endl;
+    cout << endl;
+
     /********** Date **********/
     cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(useCurrentDate, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(useCurrentDate[0] != 'Y' and useCurrentDate[0] != 'y' and useCurrentDate[0] != 'N' and useCurrentDate[0] != 'n'){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-        cout << endl;
+        if(useCurrentDate != "exit"){
+            cout << '\t'<< '\t'<< '\t'<< "** Invalid selection. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(useCurrentDate, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
 
     if(useCurrentDate[0] == 'Y' or useCurrentDate[0] == 'y'){
@@ -503,16 +632,28 @@ void RunData() {
         cin >> userMonth;
         cin.ignore(100, '\n');
 
+        wantToExit = CheckForExit(userMonth, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
         userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
             cout << endl;
             cout << endl;
-            cout << '\t'<< '\t' << '\t' << " ** Invalid month. Please try again. **" << endl;
-            cout << endl;
+            if(userMonth != "exit"){
+                cout << '\t'<< '\t' << '\t' << "** Invalid month. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
             cin.ignore(100, '\n');
+
+            wantToExit = CheckForExit(userMonth, 1);
+            if(wantToExit){
+                TrainingMenu();
+            }
         }
         cout << endl;
         month = atoi(userMonth.c_str());
@@ -524,15 +665,27 @@ void RunData() {
         cin >> userDay;
         cin.ignore(100, '\n');
 
+        wantToExit = CheckForExit(userDay, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
             cout << endl;
             cout << endl;
-            cout << '\t'<< '\t' << '\t' << "** Invalid day. Please try again. **" << endl;
-            cout << endl;
+            if(userDay != "exit"){
+                cout << '\t'<< '\t' << '\t' << "** Invalid day. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
-            cin.ignore(100, '\n');
+            cin.ignore(100,'\n');
+
+            wantToExit = CheckForExit(userDay, 1);
+            if(wantToExit){
+                TrainingMenu();
+            }
         }
         cout << endl;
         day = atoi(userDay.c_str());
@@ -542,14 +695,27 @@ void RunData() {
     cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userTrainingWeek, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid training week number. Please try again. **" << endl;
-        cout << endl;
+        if(userTrainingWeek != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid number. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
         cin.ignore(100, '\n');
+        
+        wantToExit = CheckForExit(userTrainingWeek, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
@@ -558,14 +724,27 @@ void RunData() {
     cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userDuration, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid duration. Please try again. **" << endl;
-        cout << endl;
+        if(userDuration != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid duration. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userDuration, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
@@ -574,14 +753,27 @@ void RunData() {
     cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userDistance, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<<'\t' << "** Invalid distance. Please try again. **" << endl;
-        cout << endl;
+        if(userDistance != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid distance. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userDistance, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     distance = stof(userDistance);
@@ -590,14 +782,27 @@ void RunData() {
     cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userHeartRate, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!IsValidHR(userHeartRate)){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid heart rate. Please try again. **" << endl;
-        cout << endl;
+        if(userHeartRate!= "exit"){
+            cout << '\t'<< '\t'<<'\t' << "** Invalid heart rate. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userHeartRate, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
@@ -605,6 +810,23 @@ void RunData() {
     /********** Notes ***********/
     cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
     getline(cin, notes);
+
+    checkNotesForExit = notes.substr(0, 4);
+    wantToExit = CheckForExit(checkNotesForExit, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+    while(checkNotesForExit == "exit"){
+        cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
+        getline(cin, notes);
+
+        checkNotesForExit = notes.substr(0, 4);
+        wantToExit = CheckForExit(checkNotesForExit, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+    }
+
     cout << endl;
 
     //set the run EventT attributes and eventually write event to userREPO file.
@@ -650,12 +872,14 @@ void BikeData() {
     string userDay;
     string userTrainingWeek;
     string userDuration;
+    string checkNotesForExit;
     int day;
     int month;
     int trainingWeek;
     int duration;
     float distance;
     int heartRate;
+    bool wantToExit;
     vector<int> validDays;
 
     //for testing purposes, will remove when user repositories are implemented
@@ -676,18 +900,34 @@ void BikeData() {
     cout << '\t' << '\t'<<'\t'<<"       Enter bike training data: " << endl;
     cout << endl;
 
+    cout << '\t' << '\t'<<"   Enter \"Exit\" at any time to exit the logging process." << endl;
+    cout << endl;
+
    /********** Date **********/
     cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
     cin >> useCurrentDate;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(useCurrentDate, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(useCurrentDate[0] != 'Y' and useCurrentDate[0] != 'y' and useCurrentDate[0] != 'N' and useCurrentDate[0] != 'n'){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-        cout << endl;
+        if(useCurrentDate != "exit"){
+            cout << '\t'<< '\t'<< '\t'<< "** Invalid selection. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<< "       Use Current Date (Y/N): ";
         cin >> useCurrentDate;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(useCurrentDate, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
 
    if(useCurrentDate[0] == 'Y' or useCurrentDate[0] == 'y'){
@@ -700,16 +940,28 @@ void BikeData() {
         cin >> userMonth;
         cin.ignore(100, '\n');
 
+        wantToExit = CheckForExit(userMonth, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+
         //Validate userMonth
         while(userMonth != "1" and userMonth != "2" and userMonth != "3" and userMonth != "4" and userMonth != "5" and userMonth != "6" and
         userMonth != "7" and userMonth != "8" and userMonth != "9" and userMonth != "10" and userMonth != "11" and userMonth != "12"){
             cout << endl;
             cout << endl;
-            cout << '\t'<< '\t' << '\t' << "** Invalid month. Please try again. **" << endl;
-            cout << endl;
+            if(userMonth != "exit"){
+                cout << '\t'<< '\t' << '\t' << "** Invalid month. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<'\t'<<"       Month of Workout (1-12): ";
             cin>> userMonth;
             cin.ignore(100, '\n');
+
+            wantToExit = CheckForExit(userMonth, 1);
+            if(wantToExit){
+                TrainingMenu();
+            }
         }
         cout << endl;
         month = atoi(userMonth.c_str());
@@ -721,15 +973,27 @@ void BikeData() {
         cin >> userDay;
         cin.ignore(100, '\n');
 
+        wantToExit = CheckForExit(userDay, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+
         //Validate userDay
         while(!DayIsValid(validDays, userDay)){
             cout << endl;
             cout << endl;
-            cout << '\t'<< '\t' << '\t' << "** Invalid day. Please try again. **" << endl;
-            cout << endl;
+            if(userDay != "exit"){
+                cout << '\t'<< '\t' << '\t' << "** Invalid day. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<'\t'<<"       Day of Workout: ";
             cin>> userDay;
-            cin.ignore(100, '\n');
+            cin.ignore(100,'\n');
+
+            wantToExit = CheckForExit(userDay, 1);
+            if(wantToExit){
+                TrainingMenu();
+            }
         }
         cout << endl;
         day = atoi(userDay.c_str());
@@ -739,14 +1003,27 @@ void BikeData() {
     cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
     cin >> userTrainingWeek;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userTrainingWeek, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!ContainsOnlyNumbers(userTrainingWeek) or userTrainingWeek == "0" or userTrainingWeek.length() == 0){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid number. Please try again. **" << endl;
-        cout << endl;
+        if(userTrainingWeek != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid number. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Training Week Number:  ";
         cin >> userTrainingWeek;
         cin.ignore(100, '\n');
+        
+        wantToExit = CheckForExit(userTrainingWeek, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     trainingWeek = atoi(userTrainingWeek.c_str());
@@ -755,14 +1032,27 @@ void BikeData() {
     cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
     cin >> userDuration;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userDuration, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!ContainsOnlyNumbers(userDuration) or userDuration.length() == 0 or (atoi(userDuration.c_str())) == 0){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid duration. Please try again. **" << endl;
-        cout << endl;
+        if(userDuration != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid duration. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Workout Duration (minutes):  ";
         cin >> userDuration;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userDuration, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     duration = atoi(userDuration.c_str());
@@ -771,14 +1061,27 @@ void BikeData() {
     cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles): ";
     cin >> userDistance;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userDistance, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(userDistance.length() == 0 or !IsAFloat(userDistance)){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<<'\t' << "** Invalid distance. Please try again. **" << endl;
-        cout << endl;
+        if(userDistance != "exit"){
+            cout << '\t'<< '\t'<< '\t' << "** Invalid distance. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Total Distance (miles):  ";
         cin >> userDistance;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userDistance, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     distance = stof(userDistance);
@@ -787,14 +1090,27 @@ void BikeData() {
     cout << '\t' << '\t'<<'\t'<<"       Heart Rate: ";
     cin >> userHeartRate;
     cin.ignore(100, '\n');
+
+    wantToExit = CheckForExit(userHeartRate, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+
     while(!IsValidHR(userHeartRate)){
         cout << endl;
         cout << endl;
-        cout << '\t'<< '\t'<< '\t' << "** Invalid heart rate. Please try again. **" << endl;
-        cout << endl;
+        if(userHeartRate!= "exit"){
+            cout << '\t'<< '\t'<<'\t' << "** Invalid heart rate. Please try again. **" << endl;
+            cout << endl;
+        }
         cout << '\t' << '\t'<<'\t'<<"       Heart Rate:  ";
         cin >> userHeartRate;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userHeartRate, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
     }
     cout << endl;
     heartRate = atoi(userHeartRate.c_str());
@@ -802,6 +1118,23 @@ void BikeData() {
     /********** Notes ***********/
     cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
     getline(cin, notes);
+
+    checkNotesForExit = notes.substr(0, 4);
+    wantToExit = CheckForExit(checkNotesForExit, 1);
+    if(wantToExit){
+        TrainingMenu();
+    }
+    while(checkNotesForExit == "exit"){
+        cout << '\t' << '\t'<<'\t'<<"       Notes: "; 
+        getline(cin, notes);
+
+        checkNotesForExit = notes.substr(0, 4);
+        wantToExit = CheckForExit(checkNotesForExit, 1);
+        if(wantToExit){
+            TrainingMenu();
+        }
+    }
+
     cout << endl;
 
     //set the run EventT attributes and eventually write event to userREPO file.
@@ -904,6 +1237,7 @@ void GetMean() {
     string matchingEventType;
     string enterAnotherTW;
     string getQuickAverage;
+    string userTWChoice;
     vector<EventT> matchingTWEvents;
     vector<EventT> matchingTWAndTypeEvents;
     vector<int> trainingWeekChoices;
@@ -911,6 +1245,8 @@ void GetMean() {
     bool keepGettingTWs = true;
     bool validTW;
     bool wantQuickAverage = false;
+    bool wantToExit = false;
+    bool isOnlyNumbers;
     float avgHR = 0.0;
     float avgTime = 0.0;
     float avgDist = 0.0;
@@ -943,6 +1279,9 @@ void GetMean() {
     }else{
         FillTrainingWeeks(allUserTWs);
 
+        cout << '\t' << '\t'<<"   Enter \"Exit\" at any time to exit the analyzing process." << endl;
+        cout << endl;
+
         //Ask user if they want all events for all weeks
         cout << endl;
         cout << '\t' <<"Would you like to get the average of all events for all weeks? (Y/N): ";
@@ -950,13 +1289,26 @@ void GetMean() {
         cout << endl;
         cout << endl;
         cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(getQuickAverage, 2);
+        if(wantToExit){
+            DataAnalysis();
+        }
+
         while(getQuickAverage[0] != 'Y' and getQuickAverage[0] != 'y' and getQuickAverage[0] != 'N' and getQuickAverage[0] != 'n'){
             cout << endl;
-            cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-            cout << endl;
+            if(getQuickAverage != "exit"){
+                cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                cout << endl;
+            }
             cout << '\t' << '\t'<<"Get the average of all events for all weeks? (Y/N): ";
             cin >> getQuickAverage;
             cin.ignore(100, '\n'); 
+
+            wantToExit = CheckForExit(getQuickAverage, 2);
+            if(wantToExit){
+                DataAnalysis();
+            }
         }
         
         if(getQuickAverage[0] == 'Y' or getQuickAverage[0] == 'y'){
@@ -970,7 +1322,40 @@ void GetMean() {
             cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
             cout << endl;
             cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
-            trainingWeekChoice = ValidInput();
+            cin >> userTWChoice;
+            cin.ignore(100, '\n');
+
+            wantToExit = CheckForExit(userTWChoice, 2);
+            if(wantToExit){
+                DataAnalysis();
+            }
+
+            isOnlyNumbers = ContainsOnlyNumbers(userTWChoice);
+
+            while(!isOnlyNumbers or !FindMatchingTW(stoi(userTWChoice))){
+                cout << endl;
+                if(userTWChoice != "exit" and !isOnlyNumbers){
+                    cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
+                    cout << endl;
+                }else if(isOnlyNumbers){
+                    cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
+                    cout << '\t' << '\t' << "   Please try again." << endl;
+                    cout << endl;
+                }
+                cout << endl;
+                cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
+                cout << endl;
+                cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
+                cin >> userTWChoice;
+                cin.ignore(100, '\n');
+
+                wantToExit = CheckForExit(userTWChoice, 2);
+                if(wantToExit){
+                    DataAnalysis();
+                }
+            }
+            
+            trainingWeekChoice = stoi(userTWChoice);
             cout << endl;
 
             trainingWeekChoices.push_back(trainingWeekChoice);
@@ -981,13 +1366,25 @@ void GetMean() {
                 cin >> enterAnotherTW;
                 cin.ignore(100, '\n');
 
+                wantToExit = CheckForExit(enterAnotherTW, 2);
+                if(wantToExit){
+                    DataAnalysis();
+                }
+
                 while(enterAnotherTW[0] != 'Y' and enterAnotherTW[0] != 'y' and enterAnotherTW[0] != 'N' and enterAnotherTW[0] != 'n'){
                     cout << endl;
-                    cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-                    cout << endl;
+                    if(enterAnotherTW != "exit"){
+                        cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                        cout << endl;
+                    }
                     cout << '\t' << '\t'<< '\t' <<"Enter another training week? (Y/N): ";
                     cin >> enterAnotherTW;
                     cin.ignore(100, '\n'); 
+
+                    wantToExit = CheckForExit(enterAnotherTW, 2);
+                    if(wantToExit){
+                        DataAnalysis();
+                    }
                 }   
                 cout << endl;
 
@@ -1007,7 +1404,33 @@ void GetMean() {
                             cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
                             cout << endl;
                             cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
-                            trainingWeekChoice = ValidInput();
+                            cin >> userTWChoice;
+                            cin.ignore(100, '\n');
+
+                            wantToExit = CheckForExit(userTWChoice, 2);
+                            if(wantToExit){
+                                DataAnalysis();
+                            }
+                            while(!ContainsOnlyNumbers(userTWChoice)){
+                                cout << endl;
+                                if(userTWChoice != "exit"){
+                                    cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
+                                    cout << endl;
+                                }
+                                cout << endl;
+                                cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
+                                cout << endl;
+                                cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
+                                cin >> userTWChoice;
+                                cin.ignore(100, '\n');
+
+                                wantToExit = CheckForExit(userTWChoice, 2);
+                                if(wantToExit){
+                                    DataAnalysis();
+                                }
+                            }
+
+                            trainingWeekChoice = stoi(userTWChoice);
                             cout << endl;
 
                             if(!FindMatchingTW(trainingWeekChoice)){
@@ -1046,16 +1469,31 @@ void GetMean() {
             cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
             cin >> userEventType;
             cin.ignore(100,'\n');
+
+            wantToExit = CheckForExit(userEventType, 2);
+            if(wantToExit){
+                DataAnalysis();
+            }
             cout << endl;
 
             while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
                     userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
                 cout << endl;
-                cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                if(userEventType != "exit"){
+                    cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                    cout << endl;
+                }
+                 cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
+                cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
                 cout << endl;
                 cout << '\t'<<'\t'<< '\t'<< '\t'<< "Selection: ";
                 cin >> userEventType;
                 cin.ignore(100, '\n');
+
+                wantToExit = CheckForExit(userEventType, 2);
+                if(wantToExit){
+                    DataAnalysis();
+                }
             }
 
             logEventType = userEventType[0];
@@ -1391,4 +1829,46 @@ void FillTrainingWeeks(vector<int>& tws){
         }
     }
     return;
+}
+
+bool CheckForExit(string input, int control){
+    bool wantsToExit = false;
+    string checkExit;
+    string confirmExit;
+    string process;
+
+    if(control == 1){
+        process = "logging";
+    }else{
+        process = "analyzing";
+    }
+
+    checkExit = input;
+    for(size_t i = 0; i < checkExit.length(); i++){
+        checkExit[i] = char(tolower(checkExit[i]));
+    }
+    
+    if(checkExit == "exit"){
+        cout << endl;
+        cout << endl;
+        cout << '\t' << '\t' << '\t' << "Are you sure you want to exit " << process << "? (Y/N): ";
+        cin >> confirmExit;
+        cin.ignore(100, '\n');
+
+        while(confirmExit[0] != 'Y' and confirmExit[0] != 'y' and confirmExit[0] != 'N' and confirmExit[0] != 'n'){
+            cout << endl;
+            cout << endl;
+            cout << '\t'<< '\t'<< '\t'<< "** Invalid selection. Please try again. **" << endl;
+            cout << endl;
+            cout << '\t' << '\t'<<'\t'<< "Are you sure you want to exit " << process << "? (Y/N): ";
+            cin >> confirmExit;
+            cin.ignore(100, '\n');
+        }
+
+        if(confirmExit[0] == 'Y' or confirmExit[0] == 'y'){
+            wantsToExit = true;
+        }
+    }
+
+    return wantsToExit;
 }
