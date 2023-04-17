@@ -118,7 +118,10 @@ void OutputChoices() {
     cout << '\t'<< '\t'<< '\t'<< '\t'<< "Enter 2 for Data Analysis" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<< '\t'<< '\t'<< "Enter 3 to Exit" << endl;
+    cout << '\t'<< '\t'<< '\t'<< '\t'<< "Enter 3 to Check Your Progress" << endl;
+    cout << endl;
+
+    cout << '\t'<< '\t'<< '\t'<< '\t'<< "Enter 4 to Exit" << endl;
     cout << endl;
 
     cout << "--------------------------------------------------------------------------------------" << endl;
@@ -138,10 +141,13 @@ int GetUserSelection() {
     } else if (userChoice == 2) {
         DataAnalysis();
     } else if (userChoice == 3) {
+        //INSERT FUNCTION FROM DAVID
+        //Check user progress
+    } else if (userChoice == 4){
         exit(-1);
     } 
     
-    while (userChoice <= 0 || userChoice > 3) {
+    while (userChoice <= 0 || userChoice > 4) {
         cout << endl;
         cout << endl;
         cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
@@ -156,10 +162,12 @@ int GetUserSelection() {
         } else if (userChoice == 2) {
             DataAnalysis();
         } else if (userChoice == 3) {
+            //INSERT FUNCTION FROM DAVID
+            //Check user progress
+        } else if (userChoice == 4){
             exit(-1);
-        } 
+        }
     }
-
     return userChoice;
 }
 
