@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <ctime>        //for getting current month/day
-#include <stdlib.h>     //for atoi function
-#include <iomanip>      //for setprecision
-#include <limits>       //for numeric_limits in ValidInput()
+#include <ctime>                        //for getting current month/day
+#include <stdlib.h>                     //for atoi function
+#include <iomanip>                      //for setprecision
+#include <limits>                       //for numeric_limits in ValidInput()
+#include <boost/algorithm/string.hpp>   //for the trim() function in ReadEventsFromFile()
 
 #include "userT.h"
 #include "userListT.h"
@@ -14,6 +15,7 @@ using namespace std;
 
 int numEvents = 0;
 vector<EventT> userEvents;
+string currentUserRepo;
 
 void LoginUser();
 bool Search(string name);
@@ -38,6 +40,8 @@ bool IsValidHR(string resp);
 bool FindMatchingTW(int key);
 void FillTrainingWeeks(vector<int>& tws);
 bool CheckForExit(string input, int control);
+void ReadEventsFromFile();
+void WriteToFile();
 
 int main() {
 
@@ -52,25 +56,62 @@ int main() {
 void LoginUser() {
     ofstream outFile;
     string username;
+    string createAccount;
     int newID;
+    bool userExists = false;
+    bool newAccount = false;
 
     UserListT list = UserListT();
 
     newID = list.UserListT::GetSize() + 1;
-    list.UserListT::PrintUsers();
+    //list.UserListT::PrintUsers();
 
     UserListT();
 
     cout << "Please enter your username: ";
     cin >> username;
+    cin.ignore(100, '\n');
 
-    if (!Search(username)) {
-        UserT user(username, newID);
-        outFile.open(USER_FILE, std::ios::app);
-        outFile << username << "," << newID << endl;
-        outFile.close();
+    userExists = Search(username);
 
-        newID++;
+    while(!userExists) {
+        //ask the user if they would like to create an account (Y/N)
+        cout << "That seems to be a new username. Would you like to create an account? (Y/N): ";
+        cin >> createAccount;
+        cin.ignore(100, '\n');
+
+        while(createAccount[0] != 'Y' and createAccount[0] != 'y' and createAccount[0] != 'N' and createAccount[0] != 'n'){
+            cout << endl;
+            cout << '\t' << "** Invalid selection. Please try again." << endl;
+            cout << endl;
+
+            cout << "Would you like to create an account? (Y/N): ";
+            cin >> createAccount;
+            cin.ignore(100, '\n');
+        }
+       
+        if(createAccount[0] == 'Y' or createAccount[0] == 'y'){
+            UserT user(username, newID);
+            outFile.open(USER_FILE, std::ios::app);
+            outFile << username << "," << newID << endl;
+            outFile.close();
+            newID++;
+
+            userExists = true;
+            newAccount = true;
+        }else if(createAccount[0] == 'N' or createAccount[0] == 'n'){
+            cout << "Please enter your username: ";
+            cin >> username;
+            cin.ignore(100, '\n');
+
+            userExists = Search(username);
+        }
+    }
+
+    currentUserRepo = username + "REPO.txt";
+    
+    if(userExists and !newAccount){
+        ReadEventsFromFile();
     }
 }
 
@@ -85,8 +126,7 @@ bool Search(string name){
 
     while(getline(file, line)) {
         i++;
-        if (line.find(name) != std::string::npos) {
-            std::cout << "Error: " << name << " already exists!" << std::endl;
+        if (line.find(name) != string::npos) {
             found = true;
         }
     }
@@ -144,6 +184,7 @@ int GetUserSelection() {
         //INSERT FUNCTION FROM DAVID
         //Check user progress
     } else if (userChoice == 4){
+        WriteToFile();
         exit(-1);
     } 
     
@@ -164,7 +205,8 @@ int GetUserSelection() {
         } else if (userChoice == 3) {
             //INSERT FUNCTION FROM DAVID
             //Check user progress
-        } else if (userChoice == 4){
+        } else if (userChoice == 4){\
+            WriteToFile();
             exit(-1);
         }
     }
@@ -272,10 +314,6 @@ void SwimData() {
     int heartRate;
     bool wantToExit = false;
     vector<int> validDays;
-    
-    //for testing purposes, will remove when user repositories are implemented
-    //ofstream outFile;
-    //outFile.open("dummyRepo.txt");
 
 
     cout << R"(
@@ -541,22 +579,6 @@ void SwimData() {
 
     userEvents.push_back(swimEvent);
 
-    //For testing purposes, output created event to dummyRepo file.
-    /*
-        outFile<< swimEvent.GetType() << " ; ";
-        outFile<< swimEvent.GetMonth() << " ; ";
-        outFile<< swimEvent.GetDay() << " ; ";
-        outFile<< swimEvent.GetTrainingWeek() << " ; ";
-        outFile<< swimEvent.GetTime() << " ; ";
-        outFile<< swimEvent.GetDistance() << " ; ";
-        outFile<< fixed;
-        outFile<< setprecision(2) << swimEvent.GetSpeed() << " ; ";
-        outFile<< swimEvent.GetHeartRate() << " ; ";
-        outFile<< swimEvent.GetNotes() << " ; \n";
-        
-        outFile.close();
-    */
-
     TrainingMenu();
 
 }
@@ -581,9 +603,6 @@ void RunData() {
     bool wantToExit = false;
     vector<int> validDays;
 
-    //for testing purposes, will remove when user repositories are implemented
-    //ofstream outFile;
-    //outFile.open("dummyRepo.txt");
 
     cout << R"(
 
@@ -848,23 +867,7 @@ void RunData() {
     runEvent.CalculateSpeed();
 
     userEvents.push_back(runEvent);
-
-    //For testing purposes, output created event to dummyRepo file.
-    /*
-        outFile<< runEvent.GetType() << " ; ";
-        outFile<< runEvent.GetMonth() << " ; ";
-        outFile<< runEvent.GetDay() << " ; ";
-        outFile<< runEvent.GetTrainingWeek() << " ; ";
-        outFile<< runEvent.GetTime() << " ; ";
-        outFile<< runEvent.GetDistance() << " ; ";
-        outFile<< fixed;
-        outFile<< setprecision(2) << runEvent.GetSpeed() << " ; ";
-        outFile<< runEvent.GetHeartRate() << " ; ";
-        outFile<< runEvent.GetNotes() << " ; \n";
-        
-        outFile.close();
-    */
-
+    
     TrainingMenu();
 
 
@@ -889,10 +892,7 @@ void BikeData() {
     int heartRate;
     bool wantToExit;
     vector<int> validDays;
-
-    //for testing purposes, will remove when user repositories are implemented
-    //ofstream outFile;
-    //outFile.open("dummyRepo.txt");
+    
 
     cout << R"(
                                   _     _ _        
@@ -1156,22 +1156,7 @@ void BikeData() {
     bikeEvent.CalculateSpeed();
 
     userEvents.push_back(bikeEvent);
-
-    //For testing purposes, output created event to dummyRepo file.
-    /*
-        outFile<< bikeEvent.GetType() << " ; ";
-        outFile<< bikeEvent.GetMonth() << " ; ";
-        outFile<< bikeEvent.GetDay() << " ; ";
-        outFile<< bikeEvent.GetTrainingWeek() << " ; ";
-        outFile<< bikeEvent.GetTime() << " ; ";
-        outFile<< bikeEvent.GetDistance() << " ; ";
-        outFile<< fixed;
-        outFile<< setprecision(2) << bikeEvent.GetSpeed() << " ; ";
-        outFile<< bikeEvent.GetHeartRate() << " ; ";
-        outFile<< bikeEvent.GetNotes() << " ; \n";
-        
-        outFile.close();
-    */
+    
     TrainingMenu();
 
 }
@@ -1879,4 +1864,89 @@ bool CheckForExit(string input, int control){
     }
 
     return wantsToExit;
+}
+
+void ReadEventsFromFile(){
+    ifstream inFile;
+    string line;
+    string part;
+    float dist;
+    int hr;
+    int mon;
+    int d;
+    int week;
+    int time;
+    float speed;
+
+    inFile.open(currentUserRepo.c_str());
+    while(getline(inFile, part, ';')){        
+        EventT newEvent(N, numEvents);
+
+        for(size_t i = 0; i < 9; i++){
+            if(i > 0){
+                getline(inFile, part, ';');
+                if(i == 8){     // when we get the Notes info from the file, trim the whitespace before and after it
+                    boost::trim(part);
+                }
+            }
+
+            if(i == 0){             //set the event type
+                if(part[i] == 'S'){
+                    newEvent.SetType(S);
+                }else if(part[i] == 'B'){
+                    newEvent.SetType(B);
+                }else if(part[i] == 'R'){
+                    newEvent.SetType(R);
+                }
+                numEvents++;
+            }else if(i == 1){       
+                mon = atoi(part.c_str());
+                newEvent.SetMonth(mon);
+            }else if(i == 2){       
+                d = atoi(part.c_str());
+                newEvent.SetDay(d);
+            }else if(i == 3){       
+                week = atoi(part.c_str());
+                newEvent.SetTrainingWeek(week);
+            }else if(i == 4){       
+                time = atoi(part.c_str());
+                newEvent.SetTime(time);
+            }else if(i == 5){       
+                dist = stof(part);
+                newEvent.SetDistance(dist);
+            }else if(i == 6){       
+                speed = stof(part);
+                newEvent.SetSpeed(speed);
+            }else if(i == 7){
+                hr = atoi(part.c_str());
+                newEvent.SetHeartRate(hr);
+            }else if(i == 8){
+                newEvent.SetNotes(part);
+            }
+        }
+        getline(inFile, part, '\n');
+        userEvents.push_back(newEvent);
+    }
+    inFile.close();
+}
+
+void WriteToFile(){
+    ofstream outFile;
+
+    outFile.open(currentUserRepo.c_str());
+    for(size_t i = 0; i < userEvents.size(); i++){
+        outFile<< userEvents[i].GetType() << " ; ";
+        outFile<< userEvents[i].GetMonth() << " ; ";
+        outFile<< userEvents[i].GetDay() << " ; ";
+        outFile<< userEvents[i].GetTrainingWeek() << " ; ";
+        outFile<< userEvents[i].GetTime() << " ; ";
+        outFile<< userEvents[i].GetDistance() << " ; ";
+        outFile<< fixed;
+        outFile<< setprecision(2) << userEvents[i].GetSpeed() << " ; ";
+        outFile<< userEvents[i].GetHeartRate() << " ; ";
+        outFile<< userEvents[i].GetNotes() << " ; \n";
+    }
+    outFile.close();
+
+    return;
 }

@@ -11,7 +11,7 @@ UserT::UserT(std::string username, int ID) {
     name = username;
     UserID = ID;
 
-    std::cout << "Created User with Name: " << username << " and ID " << ID << "." << std::endl;
+    //std::cout << "Created User with Name: " << username << " and ID " << ID << "." << std::endl;
 
 };
 
