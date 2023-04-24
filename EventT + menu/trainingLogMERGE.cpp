@@ -186,8 +186,8 @@ int GetUserSelection() {
     } else if (userChoice == 2) {
         DataAnalysis();
     } else if (userChoice == 3) {
-        //INSERT FUNCTION FROM DAVID
-        //Check user progress
+        OutputChoices();
+        //DAVID INSERT NEW STUFF HERE INSTEAD OF THIS FUNCTION
     } else if (userChoice == 4){
         WriteToFile();
         exit(-1);
@@ -208,8 +208,8 @@ int GetUserSelection() {
         } else if (userChoice == 2) {
             DataAnalysis();
         } else if (userChoice == 3) {
-            //INSERT FUNCTION FROM DAVID
-            //Check user progress
+            OutputChoices();
+            //DAVID INSERT NEW STUFF HERE INSTEAD OF THIS FUNCTION
         } else if (userChoice == 4){\
             WriteToFile();
             exit(-1);
@@ -1551,7 +1551,6 @@ void GetMean() {
     DataAnalysis();
 }
 
-
 void GetMax() {
     int trainingWeekChoice = 0;
     string userEventType;
@@ -1566,18 +1565,17 @@ void GetMax() {
     vector<int> allUserTWs;
     bool keepGettingTWs = true;
     bool validTW;
-    bool wantQuickMax = false;
+    //bool wantQuickMax = false;
     bool wantToExit = false;
     bool isOnlyNumbers;
 
     cout << "--------------------------------------------------------------------------------------" << endl;
 
-    //Check if there are any events for the user. If not, return to Data Analytics menu
     if(userEvents.size() == 0){
         cout << endl;
         cout << '\t' <<  "         Whoops! It looks like there are no events logged yet." << endl; 
         cout << endl;
-        cout << '\t'  << "       Please log an event before trying to calculate the max." << endl;
+        cout << '\t'  << "       Please log an event before trying to calculate the mean." << endl;
         cout << endl;
     }else{
         FillTrainingWeeks(allUserTWs);
@@ -1587,7 +1585,7 @@ void GetMax() {
 
         //Ask user if they want all events for all weeks
         cout << endl;
-        cout << '\t' <<"Would you like to get the max of all events for all weeks? (Y/N): ";
+        cout << '\t' <<"   Would you like to get the max of all events for all weeks? (Y/N): ";
         cin >> getQuickMax;
         cout << endl;
         cout << endl;
@@ -1616,7 +1614,7 @@ void GetMax() {
         
         if(getQuickMax[0] == 'Y' or getQuickMax[0] == 'y'){
             //put all events into vector
-            wantQuickMax = true;
+            //wantQuickMax = true;
             for(size_t r = 0; r < userEvents.size(); r++){
                 matchingTWAndTypeEvents.push_back(userEvents[r]);
             }
@@ -1769,7 +1767,7 @@ void GetMax() {
             cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
             cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
             cout << endl;
-            cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
+            cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
             cin >> userEventType;
             cin.ignore(100,'\n');
 
@@ -1789,7 +1787,7 @@ void GetMax() {
                  cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
                 cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
                 cout << endl;
-                cout << '\t'<<'\t'<< '\t'<< '\t'<< "Selection: ";
+                cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
                 cin >> userEventType;
                 cin.ignore(100, '\n');
 
@@ -1826,24 +1824,6 @@ void GetMax() {
             }
         }
     }
-
-    if(wantQuickMax){
-        
-    }
-    /*
-        What to do here:
-            - Ask the user for what training week they would like to evaluate
-            - Walk through vector of events and put events with matching training week # into new vector
-            - If no events have the trianing week number inputted by the user
-                Then output "Sorry, no events have that training week number. please try again" or something
-            - otherwise
-                > Walk through new vector and find the max HR, time, distance, and speed for that week
-                > Output these and return to data analysis menu
-    */    
-
-    cout << '\t' << "Max:" << endl;
-    
-
     DataAnalysis();
 }
 
