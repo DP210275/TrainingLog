@@ -6,6 +6,8 @@
 #include <iomanip>                      //for setprecision
 #include <limits>                       //for numeric_limits in ValidInput()
 #include <boost/algorithm/string.hpp>   //for the trim() function in ReadEventsFromFile()
+#include <cstdlib>                      //for Ctrl_C_handler function
+#include <signal.h>                     //^^
 
 #include "userT.h"
 #include "userListT.h"
@@ -42,8 +44,11 @@ void FillTrainingWeeks(vector<int>& tws);
 bool CheckForExit(string input, int control);
 void ReadEventsFromFile();
 void WriteToFile();
+void Ctrl_C_handler(int signum);
 
 int main() {
+
+    signal(SIGINT, Ctrl_C_handler);
 
     LoginUser();
     OutputChoices();
@@ -126,7 +131,7 @@ bool Search(string name){
 
     while(getline(file, line)) {
         i++;
-        if (line.find(name) != std::string::npos) {
+        if (line.find(name) != string::npos) {
             found = true;
         }
     }
@@ -205,7 +210,7 @@ int GetUserSelection() {
         } else if (userChoice == 3) {
             //INSERT FUNCTION FROM DAVID
             //Check user progress
-        } else if (userChoice == 4){
+        } else if (userChoice == 4){\
             WriteToFile();
             exit(-1);
         }
@@ -867,7 +872,7 @@ void RunData() {
     runEvent.CalculateSpeed();
 
     userEvents.push_back(runEvent);
-
+    
     TrainingMenu();
 
 
@@ -892,7 +897,7 @@ void BikeData() {
     int heartRate;
     bool wantToExit;
     vector<int> validDays;
-
+    
 
     cout << R"(
                                   _     _ _        
@@ -1156,7 +1161,7 @@ void BikeData() {
     bikeEvent.CalculateSpeed();
 
     userEvents.push_back(bikeEvent);
-
+    
     TrainingMenu();
 
 }
@@ -1222,7 +1227,7 @@ void GetMean() {
     string logEventType = "X";
     string matchingEventType;
     string enterAnotherTW;
-    string getQuickMax;
+    string getQuickAverage;
     string userTWChoice;
     vector<EventT> matchingTWEvents;
     vector<EventT> matchingTWAndTypeEvents;
@@ -1331,6 +1336,8 @@ void GetMean() {
                 if(wantToExit){
                     DataAnalysis();
                 }
+
+                isOnlyNumbers = ContainsOnlyNumbers(userTWChoice);
             }
             
             trainingWeekChoice = stoi(userTWChoice);
@@ -1551,7 +1558,7 @@ void GetMax() {
     string logEventType = "X";
     string matchingEventType;
     string enterAnotherTW;
-    string getQuickAverage;
+    string getQuickMax;
     string userTWChoice;
     vector<EventT> matchingTWEvents;
     vector<EventT> matchingTWAndTypeEvents;
@@ -1559,7 +1566,7 @@ void GetMax() {
     vector<int> allUserTWs;
     bool keepGettingTWs = true;
     bool validTW;
-    bool wantQuickAverage = false;
+    bool wantQuickMax = false;
     bool wantToExit = false;
     bool isOnlyNumbers;
 
@@ -1609,7 +1616,7 @@ void GetMax() {
         
         if(getQuickMax[0] == 'Y' or getQuickMax[0] == 'y'){
             //put all events into vector
-            wantQuickAverage = true;
+            wantQuickMax = true;
             for(size_t r = 0; r < userEvents.size(); r++){
                 matchingTWAndTypeEvents.push_back(userEvents[r]);
             }
@@ -1818,6 +1825,10 @@ void GetMax() {
                 }
             }
         }
+    }
+
+    if(wantQuickMax){
+        
     }
     /*
         What to do here:
@@ -2205,4 +2216,12 @@ void WriteToFile(){
     outFile.close();
 
     return;
+}
+
+void Ctrl_C_handler(int signum){
+    WriteToFile();
+
+    cout << endl << endl;
+
+    exit(signum);
 }
