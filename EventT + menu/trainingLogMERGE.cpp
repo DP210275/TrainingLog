@@ -1577,42 +1577,39 @@ void GetMax() {
         cout << '\t' << '\t'<<"   Enter \"Exit\" at any time to exit the analyzing process." << endl;
         cout << endl;
 
-        //Ask user if they want all events for all weeks
-        cout << endl;
-        cout << '\t' <<"   Would you like to get the max of all events for all weeks? (Y/N): ";
-        cin >> getQuickMax;
-        cout << endl;
-        cout << endl;
-        cin.ignore(100, '\n');
-
         wantToExit = CheckForExit(getQuickMax, 2);
         if(wantToExit){
             DataAnalysis();
         }
 
-        while(getQuickMax[0] != 'Y' and getQuickMax[0] != 'y' and getQuickMax[0] != 'N' and getQuickMax[0] != 'n'){
-            cout << endl;
-            if(getQuickMax != "exit"){
-                cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-                cout << endl;
-            }
-            cout << '\t' << '\t'<<"Get the max of all events for all weeks? (Y/N): ";
-            cin >> getQuickMax;
-            cin.ignore(100, '\n'); 
-
-            wantToExit = CheckForExit(getQuickMax, 2);
-            if(wantToExit){
-                DataAnalysis();
-            }
+        for(size_t r = 0; r < userEvents.size(); r++){
+            matchingTWAndTypeEvents.push_back(userEvents[r]);
         }
         
-        if(getQuickMax[0] == 'Y' or getQuickMax[0] == 'y'){
-            //put all events into vector
-            wantQuickMax = true;
-            for(size_t r = 0; r < userEvents.size(); r++){
-                matchingTWAndTypeEvents.push_back(userEvents[r]);
+        cout << endl;
+        cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
+        cout << endl;
+        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
+        cin >> userTWChoice;
+        cin.ignore(100, '\n');
+
+        wantToExit = CheckForExit(userTWChoice, 2);
+        if(wantToExit){
+            DataAnalysis();
+        }
+
+        isOnlyNumbers = ContainsOnlyNumbers(userTWChoice);
+
+        while(!isOnlyNumbers or !FindMatchingTW(stoi(userTWChoice))){
+            cout << endl;
+            if(userTWChoice != "exit" and !isOnlyNumbers){
+                cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
+                cout << endl;
+            }else if(isOnlyNumbers){
+                cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
+                cout << '\t' << '\t' << "   Please try again." << endl;
+                cout << endl;
             }
-        }else{
             cout << endl;
             cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
             cout << endl;
@@ -1624,81 +1621,74 @@ void GetMax() {
             if(wantToExit){
                 DataAnalysis();
             }
+        }
+        
+        trainingWeekChoice = stoi(userTWChoice);
+        cout << endl;
 
-            isOnlyNumbers = ContainsOnlyNumbers(userTWChoice);
+        trainingWeekChoices.push_back(trainingWeekChoice);
 
-            while(!isOnlyNumbers or !FindMatchingTW(stoi(userTWChoice))){
-                cout << endl;
-                if(userTWChoice != "exit" and !isOnlyNumbers){
-                    cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
-                    cout << endl;
-                }else if(isOnlyNumbers){
-                    cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
-                    cout << '\t' << '\t' << "   Please try again." << endl;
-                    cout << endl;
-                }
-                cout << endl;
-                cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
-                cout << endl;
-                cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
-                cin >> userTWChoice;
-                cin.ignore(100, '\n');
+        while(keepGettingTWs){
+            validTW = false;
+            cout << '\t' << '\t' << '\t' <<"Enter another training week? (Y/N): ";
+            cin >> enterAnotherTW;
+            cin.ignore(100, '\n');
 
-                wantToExit = CheckForExit(userTWChoice, 2);
-                if(wantToExit){
-                    DataAnalysis();
-                }
+            wantToExit = CheckForExit(enterAnotherTW, 2);
+            if(wantToExit){
+                DataAnalysis();
             }
-            
-            trainingWeekChoice = stoi(userTWChoice);
-            cout << endl;
 
-            trainingWeekChoices.push_back(trainingWeekChoice);
-
-            while(keepGettingTWs){
-                validTW = false;
-                cout << '\t' << '\t' << '\t' <<"Enter another training week? (Y/N): ";
+            while(enterAnotherTW[0] != 'Y' and enterAnotherTW[0] != 'y' and enterAnotherTW[0] != 'N' and enterAnotherTW[0] != 'n'){
+                cout << endl;
+                if(enterAnotherTW != "exit"){
+                    cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                    cout << endl;
+                }
+                cout << '\t' << '\t'<< '\t' <<"Enter another training week? (Y/N): ";
                 cin >> enterAnotherTW;
-                cin.ignore(100, '\n');
+                cin.ignore(100, '\n'); 
 
                 wantToExit = CheckForExit(enterAnotherTW, 2);
                 if(wantToExit){
                     DataAnalysis();
                 }
+            }   
+            cout << endl;
 
-                while(enterAnotherTW[0] != 'Y' and enterAnotherTW[0] != 'y' and enterAnotherTW[0] != 'N' and enterAnotherTW[0] != 'n'){
+            if(enterAnotherTW[0] == 'Y' or enterAnotherTW[0] == 'y'){
+                if(allUserTWs.size() == 1){
                     cout << endl;
-                    if(enterAnotherTW != "exit"){
-                        cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                    cout << '\t' << "      You have only logged events for one week so analyzing week " << trainingWeekChoice << "." << endl << endl;
+                    keepGettingTWs = false;
+                }else if(allUserTWs.size() == trainingWeekChoices.size()){
+                    cout << endl;
+                    cout << '\t' << '\t' << "     There are no more training weeks you can analyze." << endl;
+                    cout << endl;
+                    keepGettingTWs = false;
+                }else{
+                    while(!validTW){
                         cout << endl;
-                    }
-                    cout << '\t' << '\t'<< '\t' <<"Enter another training week? (Y/N): ";
-                    cin >> enterAnotherTW;
-                    cin.ignore(100, '\n'); 
+                        cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
+                        cout << endl;
+                        cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
+                        cin >> userTWChoice;
+                        cin.ignore(100, '\n');
 
-                    wantToExit = CheckForExit(enterAnotherTW, 2);
-                    if(wantToExit){
-                        DataAnalysis();
-                    }
-                }   
-                cout << endl;
-
-                if(enterAnotherTW[0] == 'Y' or enterAnotherTW[0] == 'y'){
-                    if(allUserTWs.size() == 1){
-                        cout << endl;
-                        cout << '\t' <<'\t' << "   You have only logged events for one week so analyzing week " << trainingWeekChoice << "." << endl << endl;
-                        keepGettingTWs = false;
-                    }else if(allUserTWs.size() == trainingWeekChoices.size()){
-                        cout << endl;
-                        cout << '\t' << '\t' << "     There are no more training weeks you can analyze." << endl;
-                        cout << endl;
-                        keepGettingTWs = false;
-                    }else{
-                        while(!validTW){
+                        wantToExit = CheckForExit(userTWChoice, 2);
+                        if(wantToExit){
+                            DataAnalysis();
+                        }
+                        while(!ContainsOnlyNumbers(userTWChoice)){
+                            cout << endl;
+                            if(userTWChoice != "exit"){
+                                cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
+                                cout << endl;
+                            }
                             cout << endl;
                             cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
                             cout << endl;
-                            cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
+                            cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
                             cin >> userTWChoice;
                             cin.ignore(100, '\n');
 
@@ -1706,155 +1696,139 @@ void GetMax() {
                             if(wantToExit){
                                 DataAnalysis();
                             }
-                            while(!ContainsOnlyNumbers(userTWChoice)){
-                                cout << endl;
-                                if(userTWChoice != "exit"){
-                                    cout << '\t'<< '\t'<< '\t'<< "**Invalid selection. Please try again.**" << endl;
-                                    cout << endl;
-                                }
-                                cout << endl;
-                                cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
-                                cout << endl;
-                                cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
-                                cin >> userTWChoice;
-                                cin.ignore(100, '\n');
-
-                                wantToExit = CheckForExit(userTWChoice, 2);
-                                if(wantToExit){
-                                    DataAnalysis();
-                                }
-                            }
-
-                            trainingWeekChoice = stoi(userTWChoice);
-                            cout << endl;
-
-                            if(!FindMatchingTW(trainingWeekChoice)){
-                                cout << endl;
-                                cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
-                                cout << '\t' << '\t' << "   Please try again." << endl;
-                                cout << endl;
-                            }else if(FindDay(trainingWeekChoices, trainingWeekChoice)){
-                                cout << '\t' << '\t' << "   Whoops! You've alrady selected that training week number." << endl;
-                                cout << '\t' << '\t' << "   Please try again." << endl;
-                                cout << endl;
-                            }else{
-                                validTW = true;
-                            }
                         }
-                        trainingWeekChoices.push_back(trainingWeekChoice);
-                    }
-                }else if(enterAnotherTW[0] == 'N' or enterAnotherTW[0] == 'n'){
-                    keepGettingTWs = false;
-                }
-            }
-        
-            for(size_t i = 0; i < trainingWeekChoices.size(); i++){
-                for(size_t s = 0; s < userEvents.size(); s++){
-                    if(userEvents[s].GetTrainingWeek() == trainingWeekChoices[i]){
-                        matchingTWEvents.push_back(userEvents[s]);
-                    }   
-                }   
-            }
 
-            //Ask what kind of events the user would like to analyze, and validate user response
+                        trainingWeekChoice = stoi(userTWChoice);
+                        cout << endl;
+
+                        if(!FindMatchingTW(trainingWeekChoice)){
+                            cout << endl;
+                            cout << '\t' << '\t' << "   Sorry, no logged events have that training week number." << endl;
+                            cout << '\t' << '\t' << "   Please try again." << endl;
+                            cout << endl;
+                        }else if(FindDay(trainingWeekChoices, trainingWeekChoice)){
+                            cout << '\t' << '\t' << "   Whoops! You've alrady selected that training week number." << endl;
+                            cout << '\t' << '\t' << "   Please try again." << endl;
+                            cout << endl;
+                        }else{
+                            validTW = true;
+                        }
+                    }
+                    trainingWeekChoices.push_back(trainingWeekChoice);
+                }
+            }else if(enterAnotherTW[0] == 'N' or enterAnotherTW[0] == 'n'){
+                keepGettingTWs = false;
+            }
+        }
+    
+        for(size_t i = 0; i < trainingWeekChoices.size(); i++){
+            for(size_t s = 0; s < userEvents.size(); s++){
+                if(userEvents[s].GetTrainingWeek() == trainingWeekChoices[i]){
+                    matchingTWEvents.push_back(userEvents[s]);
+                }   
+            }   
+        }
+
+        //Ask what kind of events the user would like to analyze, and validate user response
+        cout << endl;
+        cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
+        cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
+        cout << endl;
+        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
+        cin >> userEventType;
+        cin.ignore(100,'\n');
+
+        wantToExit = CheckForExit(userEventType, 2);
+        if(wantToExit){
+            DataAnalysis();
+        }
+        cout << endl;
+
+        while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
+                userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
             cout << endl;
-            cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
+            if(userEventType != "exit"){
+                cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
+                cout << endl;
+            }
+                cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
             cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
             cout << endl;
             cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
             cin >> userEventType;
-            cin.ignore(100,'\n');
+            cin.ignore(100, '\n');
 
             wantToExit = CheckForExit(userEventType, 2);
             if(wantToExit){
                 DataAnalysis();
             }
+        }
+
+        logEventType = userEventType[0];
+    
+        if(logEventType == "S" or logEventType == "s"){
+            matchingEventType = "Swim";
+        }else if(logEventType == "B" or logEventType == "b"){
+            matchingEventType = "Bike";
+        }else if(logEventType == "R" or logEventType == "r"){
+            matchingEventType = "Run";
+        }else if(logEventType == "A" or logEventType == "a"){
+            matchingEventType = "All";
+        }
+
+        //If the user wants a specific event analyzed, find the events with the matching training week and put them in a separate vector
+        if(matchingEventType != "All"){
+            for(size_t i = 0; i < matchingTWEvents.size(); i++){
+                if(matchingTWEvents[i].GetType() == matchingEventType){
+                    matchingTWAndTypeEvents.push_back(matchingTWEvents[i]);
+                }
+            }
+        }else{
+            //Otherwise just copy the separate vector
+            for(size_t j = 0; j < matchingTWEvents.size(); j++){
+                matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
+            }
+        }
+
+        //Get the max elements
+        float maxDist = 0;
+        for(size_t j = 0; j < matchingTWAndTypeEvents.size(); j++){
+            if(matchingTWAndTypeEvents[j].GetDistance() > maxDist){
+                maxDist = matchingTWAndTypeEvents[j].GetDistance();
+            }
+        }
+        float maxSpeed = 0;
+        for(size_t k = 0; k < matchingTWAndTypeEvents.size(); k++){
+            if(matchingTWAndTypeEvents[k].GetSpeed() > maxSpeed){
+                maxSpeed = matchingTWAndTypeEvents[k].GetSpeed();
+            }
+        }
+    
+        if (matchingTWAndTypeEvents.size() > 0){
+            size_t sizeMax = 0;
+
+            cout << fixed;
+            cout << setprecision(2) << endl;
+            if(wantQuickMax){
+                cout << '\t' << '\t' << '\t' << '\t' << "     For All Training Weeks:" << endl << endl;
+            }else if(trainingWeekChoices.size() == 1){
+                cout << '\t' << '\t' << '\t' << '\t' << " For Training Week " << trainingWeekChoice << ": " << endl << endl;
+            }else{
+                sizeMax = trainingWeekChoices.size();
+                cout << '\t' << '\t' << '\t' << '\t' << "     For Training Weeks ";
+                for(size_t t = 0; t < trainingWeekChoices.size()-1; t++){
+                    cout << trainingWeekChoices[t] << ", ";
+                }
+                cout << trainingWeekChoices[sizeMax-1] << ": " << endl << endl;
+            }
+            cout << endl << endl;
+            cout << '\t' << '\t' << '\t' << "        Max Distance: " << maxDist << " miles" <<endl << endl;
+            cout << '\t' << '\t'<< '\t' << '\t' << "  Max Speed: " << maxSpeed << "mph" << endl << endl;
             cout << endl;
-
-            while(userEventType[0] != 'S' and userEventType[0] != 'B' and userEventType[0] != 'R' and userEventType[0] != 'A' and 
-                    userEventType[0] != 's' and userEventType[0] != 'b' and userEventType[0] != 'r' and userEventType[0] != 'a'){
-                cout << endl;
-                if(userEventType != "exit"){
-                    cout << '\t'<< '\t'<<'\t'<< "** Invalid selection. Please try again. **" << endl;
-                    cout << endl;
-                }
-                 cout << '\t' << '\t' << "   Please enter the type of event for evaluation." << endl << endl;
-                cout << '\t' << "Enter 'S' for Swim, 'B' for Bike, 'R' for Run, or 'All' for all three." << endl;
-                cout << endl;
-                cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
-                cin >> userEventType;
-                cin.ignore(100, '\n');
-
-                wantToExit = CheckForExit(userEventType, 2);
-                if(wantToExit){
-                    DataAnalysis();
-                }
-            }
-
-            logEventType = userEventType[0];
-        
-            if(logEventType == "S" or logEventType == "s"){
-                matchingEventType = "Swim";
-            }else if(logEventType == "B" or logEventType == "b"){
-                matchingEventType = "Bike";
-            }else if(logEventType == "R" or logEventType == "r"){
-                matchingEventType = "Run";
-            }else if(logEventType == "A" or logEventType == "a"){
-                matchingEventType = "All";
-            }
-
-            //If the user wants a specific event analyzed, find the events with the matching training week and put them in a separate vector
-            if(matchingEventType != "All"){
-                for(size_t i = 0; i < matchingTWEvents.size(); i++){
-                    if(matchingTWEvents[i].GetType() == matchingEventType){
-                        matchingTWAndTypeEvents.push_back(matchingTWEvents[i]);
-                    }
-                }
-            }else{
-                //Otherwise just copy the separate vector
-                for(size_t j = 0; j < matchingTWEvents.size(); j++){
-                    matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
-                }
-            }
-
-            //Get the max elements
-            float maxDist = 0;
-            for(size_t j = 0; j < matchingTWAndTypeEvents.size(); j++){
-                if(matchingTWAndTypeEvents[j].GetDistance() > maxDist){
-                    maxDist = matchingTWAndTypeEvents[j].GetDistance();
-                }
-            }
-            float maxSpeed = 0;
-            for(size_t k = 0; k < matchingTWAndTypeEvents.size(); k++){
-                if(matchingTWAndTypeEvents[k].GetSpeed() > maxSpeed){
-                    maxSpeed = matchingTWAndTypeEvents[k].GetSpeed();
-                }
-            }
-        
-            if (matchingTWAndTypeEvents.size() > 0){
-
-                cout << fixed;
-                cout << setprecision(2) << endl;
-                if(wantQuickMax){
-                    cout << '\t' << '\t' << '\t' << '\t' << "     For All Training Weeks:" << endl << endl;
-                }else if(trainingWeekChoices.size() == 1){
-                    cout << '\t' << '\t' << '\t' << '\t' << "     For Training Week " << trainingWeekChoice << ": " << endl << endl;
-                }else{
-                    size = trainingWeekChoices.size();
-                    cout << '\t' << '\t' << '\t' << '\t' << "     For Training Weeks ";
-                    for(size_t t = 0; t < trainingWeekChoices.size()-1; t++){
-                        cout << trainingWeekChoices[t] << ", ";
-                    }
-                    cout << trainingWeekChoices[size-1] << ": " << endl << endl;
-                }
-                cout << '\t' << '\t' << '\t' << '\t' << "Max Distance: " << maxDist << " miles" <<endl << endl;
-                cout << '\t' << '\t'<< '\t' << '\t' << "Max Speed: " << maxSpeed << "mph" << endl << endl;
-                cout << endl;
-            }else{
-                cout << endl;
-                cout << '\t' << '\t' << "No " << matchingEventType << " events logged. Please log events for analyzing." << endl;
-                cout << endl;   
-            }
+        }else{
+            cout << endl;
+            cout << '\t' << '\t' << "No " << matchingEventType << " events logged. Please log events for analyzing." << endl;
+            cout << endl;   
         }
     }
     DataAnalysis();
