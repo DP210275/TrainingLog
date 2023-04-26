@@ -6,8 +6,7 @@
 #include <iomanip>                      //for setprecision
 #include <limits>                       //for numeric_limits in ValidInput()
 #include <boost/algorithm/string.hpp>   //for the trim() function in ReadEventsFromFile()
-#include <cstdlib>                      //for Ctrl_C_handler function
-#include <signal.h>                     //^^
+#include <algorithm>                    //for max_element
 
 #include "userT.h"
 #include "userListT.h"
@@ -44,11 +43,8 @@ void FillTrainingWeeks(vector<int>& tws);
 bool CheckForExit(string input, int control);
 void ReadEventsFromFile();
 void WriteToFile();
-void Ctrl_C_handler(int signum);
 
 int main() {
-
-    signal(SIGINT, Ctrl_C_handler);
 
     LoginUser();
     OutputChoices();
@@ -131,7 +127,7 @@ bool Search(string name){
 
     while(getline(file, line)) {
         i++;
-        if (line.find(name) != string::npos) {
+        if (line.find(name) != std::string::npos) {
             found = true;
         }
     }
@@ -186,8 +182,8 @@ int GetUserSelection() {
     } else if (userChoice == 2) {
         DataAnalysis();
     } else if (userChoice == 3) {
-        OutputChoices();
-        //DAVID INSERT NEW STUFF HERE INSTEAD OF THIS FUNCTION
+        TrainingMenu();
+        //This will be for DAVID to put the Check User Progress
     } else if (userChoice == 4){
         WriteToFile();
         exit(-1);
@@ -208,9 +204,9 @@ int GetUserSelection() {
         } else if (userChoice == 2) {
             DataAnalysis();
         } else if (userChoice == 3) {
-            OutputChoices();
-            //DAVID INSERT NEW STUFF HERE INSTEAD OF THIS FUNCTION
-        } else if (userChoice == 4){\
+            TrainingMenu();
+            //This will be for DAVID to put the Check User Progress
+        } else if (userChoice == 4){
             WriteToFile();
             exit(-1);
         }
@@ -218,8 +214,7 @@ int GetUserSelection() {
     return userChoice;
 }
 
-int ValidInput()
-{
+int ValidInput(){
     int x;
     cin >> x;
     while(cin.fail())
@@ -872,7 +867,7 @@ void RunData() {
     runEvent.CalculateSpeed();
 
     userEvents.push_back(runEvent);
-    
+
     TrainingMenu();
 
 
@@ -897,7 +892,7 @@ void BikeData() {
     int heartRate;
     bool wantToExit;
     vector<int> validDays;
-    
+
 
     cout << R"(
                                   _     _ _        
@@ -1161,7 +1156,7 @@ void BikeData() {
     bikeEvent.CalculateSpeed();
 
     userEvents.push_back(bikeEvent);
-    
+
     TrainingMenu();
 
 }
@@ -1336,8 +1331,6 @@ void GetMean() {
                 if(wantToExit){
                     DataAnalysis();
                 }
-
-                isOnlyNumbers = ContainsOnlyNumbers(userTWChoice);
             }
             
             trainingWeekChoice = stoi(userTWChoice);
@@ -1551,6 +1544,7 @@ void GetMean() {
     DataAnalysis();
 }
 
+
 void GetMax() {
     int trainingWeekChoice = 0;
     string userEventType;
@@ -1565,7 +1559,7 @@ void GetMax() {
     vector<int> allUserTWs;
     bool keepGettingTWs = true;
     bool validTW;
-    //bool wantQuickMax = false;
+    bool wantQuickMax = false;
     bool wantToExit = false;
     bool isOnlyNumbers;
 
@@ -1614,7 +1608,7 @@ void GetMax() {
         
         if(getQuickMax[0] == 'Y' or getQuickMax[0] == 'y'){
             //put all events into vector
-            //wantQuickMax = true;
+            wantQuickMax = true;
             for(size_t r = 0; r < userEvents.size(); r++){
                 matchingTWAndTypeEvents.push_back(userEvents[r]);
             }
@@ -1821,6 +1815,45 @@ void GetMax() {
                 for(size_t j = 0; j < matchingTWEvents.size(); j++){
                     matchingTWAndTypeEvents.push_back(matchingTWEvents[j]);
                 }
+            }
+
+            //Get the max elements
+            float maxDist = 0;
+            for(size_t j = 0; j < matchingTWAndTypeEvents.size(); j++){
+                if(matchingTWAndTypeEvents[j].GetDistance() > maxDist){
+                    maxDist = matchingTWAndTypeEvents[j].GetDistance();
+                }
+            }
+            float maxSpeed = 0;
+            for(size_t k = 0; k < matchingTWAndTypeEvents.size(); k++){
+                if(matchingTWAndTypeEvents[k].GetSpeed() > maxSpeed){
+                    maxSpeed = matchingTWAndTypeEvents[k].GetSpeed();
+                }
+            }
+        
+            if (matchingTWAndTypeEvents.size() > 0){
+
+                cout << fixed;
+                cout << setprecision(2) << endl;
+                if(wantQuickMax){
+                    cout << '\t' << '\t' << '\t' << '\t' << "     For All Training Weeks:" << endl << endl;
+                }else if(trainingWeekChoices.size() == 1){
+                    cout << '\t' << '\t' << '\t' << '\t' << "     For Training Week " << trainingWeekChoice << ": " << endl << endl;
+                }else{
+                    size = trainingWeekChoices.size();
+                    cout << '\t' << '\t' << '\t' << '\t' << "     For Training Weeks ";
+                    for(size_t t = 0; t < trainingWeekChoices.size()-1; t++){
+                        cout << trainingWeekChoices[t] << ", ";
+                    }
+                    cout << trainingWeekChoices[size-1] << ": " << endl << endl;
+                }
+                cout << '\t' << '\t' << '\t' << '\t' << "Max Distance: " << maxDist << " miles" <<endl << endl;
+                cout << '\t' << '\t'<< '\t' << '\t' << "Max Speed: " << maxSpeed << "mph" << endl << endl;
+                cout << endl;
+            }else{
+                cout << endl;
+                cout << '\t' << '\t' << "No " << matchingEventType << " events logged. Please log events for analyzing." << endl;
+                cout << endl;   
             }
         }
     }
@@ -2196,12 +2229,4 @@ void WriteToFile(){
     outFile.close();
 
     return;
-}
-
-void Ctrl_C_handler(int signum){
-    WriteToFile();
-
-    cout << endl << endl;
-
-    exit(signum);
 }
