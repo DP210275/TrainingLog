@@ -242,10 +242,10 @@ void TrainingMenu() {
     cout << '\t'<< '\t'<<'\t'<< "    Enter 1 to log a swim training" << endl;
     cout << endl;
 
-    cout << '\t'<<'\t'<<'\t'<< "    Enter 2 to log a run training" << endl;
+    cout << '\t'<<'\t'<<'\t'<< "    Enter 2 to log a bike training" << endl;
     cout << endl;
 
-    cout << '\t'<< '\t'<<'\t'<< "    Enter 3 to log a bike training" << endl;
+    cout << '\t'<< '\t'<<'\t'<< "    Enter 3 to log a run training" << endl;
     cout << endl;
 
     cout << '\t'<< '\t'<<'\t'<< "    Enter 4 to go back to the Main Menu" << endl;
@@ -262,9 +262,9 @@ void TrainingMenu() {
     if (trainingChoice == 1) {
         SwimData();
     } else if (trainingChoice == 2) {
-        RunData();
-    } else if (trainingChoice == 3) {
         BikeData();
+    } else if (trainingChoice == 3) {
+        RunData();
     } else if (trainingChoice ==4){
         OutputChoices();
         GetUserSelection();
@@ -283,9 +283,9 @@ void TrainingMenu() {
          if (trainingChoice == 1) {
             SwimData();
         } else if (trainingChoice == 2) {
-            RunData();
-        } else if (trainingChoice == 3) {
             BikeData();
+        } else if (trainingChoice == 3) {
+            RunData();
         } else if (trainingChoice ==4){
             OutputChoices();
             GetUserSelection();
@@ -1672,7 +1672,7 @@ void GetMax() {
                         cout << endl;
                         cout << '\t'<< '\t'<<"Please enter the training week number for evaluation." << endl;
                         cout << endl;
-                        cout << '\t' << '\t' << '\t' << '\t' << "Selection: ";
+                        cout << '\t'<<'\t'<< '\t' << '\t' << "    Selection: ";
                         cin >> userTWChoice;
                         cin.ignore(100, '\n');
 
@@ -1816,7 +1816,7 @@ void GetMax() {
                 cout << '\t' << '\t' << '\t' << '\t' << " For Training Week " << trainingWeekChoice << ": " << endl << endl;
             }else{
                 sizeMax = trainingWeekChoices.size();
-                cout << '\t' << '\t' << '\t' << '\t' << "     For Training Weeks ";
+                cout << '\t' << '\t' << '\t' << '\t' << "For Training Weeks ";
                 for(size_t t = 0; t < trainingWeekChoices.size()-1; t++){
                     cout << trainingWeekChoices[t] << ", ";
                 }
