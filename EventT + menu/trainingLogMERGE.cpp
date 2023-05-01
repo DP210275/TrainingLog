@@ -2197,7 +2197,7 @@ void WriteToFile(){
         outFile<< userEvents[i].GetTime() << " ; ";
         outFile<< userEvents[i].GetDistance() << " ; ";
         outFile<< fixed;
-        outFile<< setprecision(2) << userEvents[i].GetTime() << " ; ";
+        outFile<< setprecision(2) << userEvents[i].GetSpeed() << " ; ";
         outFile<< userEvents[i].GetHeartRate() << " ; ";
         outFile<< userEvents[i].GetNotes() << " ; \n";
     }
