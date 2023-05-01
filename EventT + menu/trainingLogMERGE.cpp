@@ -1545,6 +1545,7 @@ void GetMean() {
 }
 
 
+
 void GetMax() {
     int trainingWeekChoice = 0;
     string userEventType;
@@ -1823,7 +1824,7 @@ void GetMax() {
             }
             cout << endl << endl;
             cout << '\t' << '\t' << '\t' << "        Max Distance: " << maxDist << " miles" <<endl << endl;
-            cout << '\t' << '\t'<< '\t' << '\t' << "  Max Speed: " << maxSpeed << "mph" << endl << endl;
+            cout << '\t' << '\t'<< '\t' << '\t' << "  Max Speed: " << maxSpeed << " mph" << endl << endl;
             cout << endl;
         }else{
             cout << endl;
@@ -2196,7 +2197,7 @@ void WriteToFile(){
         outFile<< userEvents[i].GetTime() << " ; ";
         outFile<< userEvents[i].GetDistance() << " ; ";
         outFile<< fixed;
-        outFile<< setprecision(2) << userEvents[i].GetSpeed() << " ; ";
+        outFile<< setprecision(2) << userEvents[i].GetTime() << " ; ";
         outFile<< userEvents[i].GetHeartRate() << " ; ";
         outFile<< userEvents[i].GetNotes() << " ; \n";
     }
