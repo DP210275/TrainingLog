@@ -1,0 +1,9 @@
+UserT header and implementation file were updated. These will both need updated.
+
+In my UserTest.cpp There are two new functions that are needed. FloatCheck() (Line 91) and ProgressCheck() (Line 108).
+
+FloatCheck can be put anywhere in the merged file along side ProgressCheck, as long as they are global. 
+
+Specifically though, ProgressCheck() needs to be called on line ~1834 Where "Overall Performance" is. The line cout "/t Overall Performance" can be deleted as its taken care of in my code.
+
+As always please test and let me know if any issues arise. Thank you for your help.
