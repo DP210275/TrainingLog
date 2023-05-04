@@ -92,7 +92,7 @@ float FloatCheck(string input) {
     bool notValid = true;
     float number;
     while(notValid) {
-        if (input.find_first_not_of("123456789.") != string::npos) {
+        if (input.find_first_not_of("1234567890.") != string::npos) {
             cout << "Invalid Number: " << input << endl;
             cout << "Enter a valid float value: ";
             cin >> input;
