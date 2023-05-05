@@ -43,6 +43,8 @@ void FillTrainingWeeks(vector<int>& tws);
 bool CheckForExit(string input, int control);
 void ReadEventsFromFile();
 void WriteToFile();
+float FloatCheck(string input);
+void ProgressCheck();
 
 int main() {
 
@@ -182,8 +184,7 @@ int GetUserSelection() {
     } else if (userChoice == 2) {
         DataAnalysis();
     } else if (userChoice == 3) {
-        TrainingMenu();
-        //This will be for DAVID to put the Check User Progress
+        GetOverall();
     } else if (userChoice == 4){
         WriteToFile();
         exit(-1);
@@ -204,8 +205,7 @@ int GetUserSelection() {
         } else if (userChoice == 2) {
             DataAnalysis();
         } else if (userChoice == 3) {
-            TrainingMenu();
-            //This will be for DAVID to put the Check User Progress
+            GetOverall();
         } else if (userChoice == 4){
             WriteToFile();
             exit(-1);
@@ -1838,15 +1838,10 @@ void GetMax() {
 void GetOverall() {
     cout << "--------------------------------------------------------------------------------------" << endl;
 
-    /*
-        What to do here:
-            Maybe somehow do a graph of some sort? 
-    */    
+    ProgressCheck();
 
-    cout << '\t' << "Overall performance:" << endl;
-
-
-    DataAnalysis();
+    OutputChoices();
+    GetUserSelection();
 }
 
 int GetLocalMonthOrDay(int control){
@@ -2203,5 +2198,114 @@ void WriteToFile(){
     }
     outFile.close();
 
+    return;
+}
+
+float FloatCheck(string input) {
+    bool notValid = true;
+    float number;
+    while(notValid) {
+        if (input.find_first_not_of("1234567890.") != string::npos) {
+            cout << "Invalid Number: " << input << endl;
+            cout << "Enter a valid float value: ";
+            cin >> input;
+            cout << endl << endl;
+        } else {
+            number = static_cast<float>(atof(input.c_str()));
+            notValid = false;
+        }
+    }
+    return number;
+}
+
+void ProgressCheck() {
+    UserT progressChecker ("Progress", 999);
+    string swim;
+    string bike;
+    string run;
+
+    float swimNum;
+    float bikeNum;
+    float runNum;
+
+    char choice;
+
+    bool notValid {true};
+
+    cout << "--------------------------------------------------------------------------------------" << endl << endl;;
+    cout << "                    WELCOME TO THE {BETA} OF THE PROGRESS TRACKER!" << endl;
+    cout << "         Disclaimer: Bugs may be present! Please Report them to the retailer!" << endl << endl;
+
+    cout << "--------------------------------------------------------------------------------------" << endl << endl;
+    cout << "                       Enter your SWIM event speed (mph): ";
+    cin >> swim;
+    swimNum = FloatCheck(swim);
+    cout << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
+    cout << endl;
+    cout << "                       Enter your BIKE event speed (mph): ";
+    cin >> bike;
+    bikeNum = FloatCheck(bike);
+    cout << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
+    cout << endl;
+    cout << "                       Enter your RUN event speed (mph):  ";
+    cin >> run;
+    runNum = FloatCheck(run);
+    cout << endl;
+    cout << "--------------------------------------------------------------------------------------" << endl;
+    cout << endl;
+
+    while(notValid) {
+
+        cout << "                       Select a comparison goal (A, B, C, D)" << endl << endl;
+        cout << "                                   {A} Beginner" << endl;
+        cout << "                                   {B} Intermediate" << endl;
+        cout << "                                   {C} Expert" << endl;
+        cout << "                                   {D} Custom" << endl << endl;
+        cout << "--------------------------------------------------------------------------------------" << endl << endl;
+        cout << "                                    Choice: ";
+        cin >> choice;
+        cout << endl;
+        cout << "--------------------------------------------------------------------------------------" << endl << endl;
+    
+        if (tolower(choice) == 'a') {
+            cout << "                                   Beginner Selected!" << endl;
+            notValid = false;
+            progressChecker.SetSwim(static_cast<float>(1.0));
+            progressChecker.SetRun(static_cast<float>(12.0));
+            progressChecker.SetBike(static_cast<float>(6.0));
+
+        } else if (tolower(choice) == 'b') {
+            cout << "                               Intermediate Selected!" << endl;
+            notValid = false;
+            progressChecker.SetSwim(static_cast<float>(2.0));
+            progressChecker.SetRun(static_cast<float>(16.0));
+            progressChecker.SetBike(static_cast<float>(8.0));
+
+        } else if (tolower(choice) == 'c') {
+            cout << "                                   Expert Selected!" << endl;
+            notValid = false;
+            progressChecker.SetSwim(static_cast<float>(2.5));
+            progressChecker.SetRun(static_cast<float>(20.0));
+            progressChecker.SetBike(static_cast<float>(10.0));
+            
+        } else if (tolower(choice) == 'd') {
+            cout << "                                   Custom Selected!" << endl;
+            progressChecker.CheckTargets();
+            notValid = false;
+        } else {
+            cout << "                                   Input Invalid!" << endl;
+        }
+
+    }
+    notValid = true;
+    cout << "--------------------------------------------------------------------------------------" << endl << endl;
+    progressChecker.SwimCheck(swimNum);
+    cout << "--------------------------------------------------------------------------------------" << endl << endl;
+    progressChecker.BikeCheck(bikeNum);
+    cout << "--------------------------------------------------------------------------------------" << endl << endl;
+    progressChecker.RunCheck(runNum);
+    cout << "--------------------------------------------------------------------------------------" << endl << endl;
     return;
 }
